@@ -1,0 +1,91 @@
+﻿<Window x:Class="QuizConfigurator.View.Dialogs.ImportQuestionsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuizConfigurator.View.Dialogs"
+        mc:Ignorable="d"
+        Title="Import Question From Open Trivia Database" Height="350" Width="300">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Category:" FontWeight="Bold"/>
+            <ComboBox Grid.Row="1" IsReadOnly="True">
+                <ComboBoxItem Content="Category One"/>
+                <ComboBoxItem Content="Category Two"/>
+                <ComboBoxItem Content="Category Three"/>
+            </ComboBox>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Difficulty:" FontWeight="Bold"/>
+            <ComboBox Grid.Row="1" IsReadOnly="True">
+                <ComboBoxItem Content="Easy"/>
+                <ComboBoxItem Content="Medium"/>
+                <ComboBoxItem Content="Hard"/>
+            </ComboBox>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label 
+            Content="Number Of Questions:" 
+            FontWeight="Bold" 
+            Grid.Column="0" 
+            HorizontalAlignment="Left"/>
+                <Label 
+            Content="5" 
+            Grid.Column="1" 
+            HorizontalAlignment="Right"/>
+            </Grid>
+
+            <Slider 
+        Grid.Row="1" 
+        Minimum="0" 
+        Maximum="20" 
+        Value="5" 
+        TickFrequency="20" 
+        IsSnapToTickEnabled="True"/>
+        </Grid>
+
+        <StackPanel 
+    Grid.Row="3" 
+    Orientation="Horizontal" 
+    HorizontalAlignment="Center">
+            <Button 
+        Content="Cancel" 
+        Width="50" 
+        Height="20"
+        Margin="0,0,15,0"
+        Command="{Binding CancelCommand}"
+CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button 
+        Content="Import" 
+        Width="50" 
+        Height="20"
+        Command="{Binding ExecuteImportCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>

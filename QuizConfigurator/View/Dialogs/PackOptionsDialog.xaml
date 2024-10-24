@@ -1,0 +1,107 @@
+﻿<Window x:Class="QuizConfigurator.View.Dialogs.PackOptionsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuizConfigurator.View.Dialogs"
+        xmlns:converters="clr-namespace:QuizConfigurator.Converters" 
+        xmlns:viewmodel="clr-namespace:QuizConfigurator.ViewModel" 
+        d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+        mc:Ignorable="d"
+        Title="Pack Options" Height="350" Width="300">
+    <Window.Resources>
+        <converters:EnumToListConverter x:Key="EnumToListConverter" />
+        <converters:DoubleToIntConverter x:Key="DoubleToIntConverter" />
+        <converters:DifficultyLevelConverter x:Key="DifficultyLevelConverter"/>
+    </Window.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid 
+            Grid.Row="0"
+            DataContext="{Binding ActivePack}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Pack Name:" FontWeight="Bold"/>
+            <TextBox Grid.Row="1" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        </Grid>
+
+        <Grid 
+            Grid.Row="1"
+            DataContext="{Binding ActivePack}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Difficulty:" FontWeight="Bold"/>
+            <ComboBox 
+                Grid.Row="1" 
+                IsReadOnly="True"
+                SelectedItem="{Binding Difficulty, Converter={StaticResource DifficultyLevelConverter}, UpdateSourceTrigger=PropertyChanged}">>
+                <ComboBox.ItemsSource>
+                    <Binding Converter="{StaticResource EnumToListConverter}"/>
+                </ComboBox.ItemsSource>
+            </ComboBox>
+        </Grid>
+
+        <Grid 
+            Grid.Row="2"
+            DataContext="{Binding ActivePack}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label 
+                    Content="Time Limit:" 
+                    FontWeight="Bold" 
+                    Grid.Column="0" 
+                    HorizontalAlignment="Left"/>
+                <Label 
+                    Content="{Binding TimeLimitInSeconds}" 
+                    Grid.Column="1" 
+                    HorizontalAlignment="Right"/>
+            </Grid>
+
+            <Slider 
+                Grid.Row="1" 
+                Minimum="0" 
+                Maximum="120" 
+                Value="{Binding TimeLimitInSeconds, Converter={StaticResource DoubleToIntConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                TickFrequency="5" 
+                IsSnapToTickEnabled="True"
+                TickPlacement="BottomRight"/>
+        </Grid>
+
+        <StackPanel 
+            Grid.Row="3" 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Center">
+            <Button 
+                Content="Cancel" 
+                Width="50" 
+                Height="20"
+                Margin="0,0,15,0"
+                Command="{Binding ConfigurationViewModel.ClosePackOptionsCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button 
+                Content="Create" 
+                Width="50" 
+                Height="20"
+                Command="{Binding AddNewPackCommand}"/>
+        </StackPanel>
+
+
+    </Grid>
+</Window>

@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="QuizConfigurator.View.PlayerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuizConfigurator.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="#F0F0F0">
+
+    <UserControl.Resources>
+
+        <!-- Button styling -->
+        <Style TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Background" Value="#E9967A"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Padding" Value="15,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="{TemplateBinding Padding}" 
+                            CornerRadius="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation 
+                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
+                                To="#D8876E" 
+                                Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation 
+                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" 
+                                To="#E9967A" 
+                                Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    
+    <Grid Height="450">
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid 
+                Grid.Row="0" 
+                HorizontalAlignment="Stretch">
+                <TextBlock 
+                    Text="12" 
+                    FontSize="34" 
+                    FontWeight="Bold"
+                    Width="40"
+                    HorizontalAlignment="Right"
+                    Margin="10,0"/>
+            </Grid>
+
+            <WrapPanel 
+                Grid.Row="1" 
+                Orientation="Horizontal" 
+                Width="500">
+                <TextBlock 
+                    Text="This is where the question will be shown" 
+                    FontSize="34" 
+                    TextWrapping="Wrap" 
+                    TextAlignment="Center"/>
+            </WrapPanel>
+
+            <DockPanel 
+                Grid.Row="2"
+                Width="500">
+                <TextBlock 
+                    Text="Question 1 of 7" 
+                    FontSize="14" 
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Center"
+                    Margin="10"/>
+            </DockPanel>
+        </Grid>
+
+        <Grid 
+            Grid.Row="1" 
+            Width="450" 
+            Height="200"
+            Margin="0,30,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button 
+                Content="Answer 1" 
+                Width="200"    
+                Height="70"  
+                Margin="10" 
+                Grid.Row="0" 
+                Grid.Column="0"/>
+            <Button 
+                Content="Answer 2" 
+                Width="200" 
+                Height="70"  
+                Margin="10" 
+                Grid.Row="0" 
+                Grid.Column="1"/>
+            <Button 
+                Content="Answer 3" 
+                Width="200" 
+                Height="70"   
+                Margin="10" 
+                Grid.Row="1" 
+                Grid.Column="0"/>
+            <Button 
+                Content="Answer 4" 
+                Width="200" 
+                Height="70"  
+                Margin="10" 
+                Grid.Row="1" 
+                Grid.Column="1"/>
+        </Grid>
+
+    </Grid>
+</UserControl>
