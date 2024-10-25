@@ -107,7 +107,7 @@ public class MainWindowViewModel : BaseViewModel
         if (result == MessageBoxResult.Yes)
         {
             Application.Current.Shutdown();
-        }
+        } 
     }
     private bool CanSetPlayMode(object arg) => !_isPlayMode && ActivePack.Questions.Count > 0;
     private void SetPlayMode(object obj)

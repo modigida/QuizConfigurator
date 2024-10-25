@@ -15,6 +15,7 @@
     
     <UserControl.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
 
@@ -77,6 +78,18 @@
             Grid.Row="1" 
             Grid.Column="1"
             Visibility="{Binding ConfigurationViewModel.IsComponentVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <Grid 
+            Grid.Row="1" 
+            Grid.Column="1"
+            Visibility="{Binding ConfigurationViewModel.IsComponentVisible, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+            <WrapPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top">
+                <Label
+                    x:Name="DisplayTextSelectedQuestion"
+                    Content="Bind to selected string" />
+            </WrapPanel>
+        </Grid>
 
     </Grid>
 </UserControl>

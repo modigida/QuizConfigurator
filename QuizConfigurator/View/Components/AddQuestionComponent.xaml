@@ -20,34 +20,34 @@
                 FontWeight="Bold"/>
             <TextBox 
                 Height="80"
-                Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}"/>
+                Text="{Binding Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
             <Label 
                 Content="Correct Answer:" 
                 FontWeight="Bold"/>
             <TextBox 
                 Height="20" 
-                Text="{Binding CorrectAnswer, UpdateSourceTrigger=PropertyChanged}"/>
+                Text="{Binding CorrectAnswer, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
             <Label 
                 Content="First Incorrect Answer:" 
                 FontWeight="Bold"/>
             <TextBox 
                 Height="20"
-                Text="{Binding IncorrectAnswers[0], UpdateSourceTrigger=PropertyChanged}"/>
+                Text="{Binding IncorrectAnswers[0], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
             <Label 
                 Content="Second Incorrect Answer:" 
                 FontWeight="Bold"/>
             <TextBox 
                 Height="20"
-                Text="{Binding IncorrectAnswers[1], UpdateSourceTrigger=PropertyChanged}"/>
+                Text="{Binding IncorrectAnswers[1], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 
             <Label 
                 Content="Third Incorrect Answer:" 
                 FontWeight="Bold"/>
             <TextBox 
                 Height="20"
-                Text="{Binding IncorrectAnswers[2], UpdateSourceTrigger=PropertyChanged}"/>
+                Text="{Binding IncorrectAnswers[2], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
 
         </StackPanel>
 
