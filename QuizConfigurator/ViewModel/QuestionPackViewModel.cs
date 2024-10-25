@@ -40,7 +40,6 @@ public class QuestionPackViewModel : BaseViewModel
     public QuestionPackViewModel(QuestionPack model)
     {
         _model = model;
-        //Questions = new ObservableCollection<QuestionViewModel>(_model.Questions);
 
         Questions = new ObservableCollection<QuestionViewModel>(
             _model.Questions.Select(q => new QuestionViewModel(q))

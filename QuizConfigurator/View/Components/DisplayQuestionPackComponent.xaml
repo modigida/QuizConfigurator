@@ -9,6 +9,7 @@
              xmlns:helper="clr-namespace:QuizConfigurator.Helpers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -21,7 +22,8 @@
             Padding="5"
             Margin="5"
             VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch">
+            HorizontalAlignment="Stretch"
+            MinHeight="400">
             
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ListView

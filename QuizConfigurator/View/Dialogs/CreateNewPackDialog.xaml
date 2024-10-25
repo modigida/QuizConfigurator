@@ -49,8 +49,7 @@
             <Label Grid.Row="0" Content="Difficulty:" FontWeight="Bold"/>
             <ComboBox 
                 Grid.Row="1" 
-                IsReadOnly="True" 
-                SelectedItem="{Binding Difficulty, Converter={StaticResource DifficultyLevelConverter}, UpdateSourceTrigger=PropertyChanged}">
+                SelectedItem="{Binding Difficulty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <ComboBox.ItemsSource>
                     <Binding Converter="{StaticResource EnumToListConverter}"/>
                 </ComboBox.ItemsSource>
