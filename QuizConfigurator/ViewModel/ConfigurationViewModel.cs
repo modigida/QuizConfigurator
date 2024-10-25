@@ -1,13 +1,10 @@
-﻿
-using QuizConfigurator.Commands;
+﻿using QuizConfigurator.Commands;
 using QuizConfigurator.Model;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace QuizConfigurator.ViewModel;
 public class ConfigurationViewModel : BaseViewModel
@@ -122,11 +119,26 @@ public class ConfigurationViewModel : BaseViewModel
     {
         if (SelectedItems != null)
         {
-            var questionsToRemove = SelectedItems.ToList();
-            foreach (var question in questionsToRemove)
+            MessageBoxResult result;
+            var messageOneQuestion = $"Sure to delete {SelectedItems.Count} question?";
+            var messageSeveralQuestions = $"Sure to delete {SelectedItems.Count} questions?";
+            if (SelectedItems.Count == 1)
             {
-                _mainWindowViewModel.ActivePack?.Questions.Remove(question);
-                SelectedItems.Remove(question);
+                result = MessageBox.Show(messageOneQuestion, "Delete Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            }
+            else
+            {
+                result = MessageBox.Show(messageSeveralQuestions, "Delete Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            }
+
+            if (result == MessageBoxResult.Yes)
+            {
+                var questionsToRemove = SelectedItems.ToList();
+                foreach (var question in questionsToRemove)
+                {
+                    _mainWindowViewModel.ActivePack?.Questions.Remove(question);
+                    SelectedItems.Remove(question);
+                }
             }
         }
     }
@@ -147,9 +159,7 @@ public class ConfigurationViewModel : BaseViewModel
             OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
             CommandManager.InvalidateRequerySuggested();
         }
-
     }
-    // Continue here
     private void SaveEditPackOptions(object obj)
     {
         if (_mainWindowViewModel.ActivePack != null)
@@ -158,6 +168,4 @@ public class ConfigurationViewModel : BaseViewModel
         }
         _mainWindowViewModel.ClosePackOptions(obj);
     }
-
-    
 }
