@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
         <Grid 
             Grid.Row="0"
-            DataContext="{Binding ActivePack}">
+            DataContext="{Binding NewPack}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -106,7 +106,8 @@
                 Content="Create" 
                 Width="50" 
                 Height="20"
-                Command="{Binding AddNewPackCommand}"/>
+                Command="{Binding AddNewPackCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
         </StackPanel>
 
 

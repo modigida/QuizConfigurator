@@ -9,8 +9,6 @@ using System.Windows.Threading;
 namespace QuizConfigurator.ViewModel;
 public class MainWindowViewModel : BaseViewModel
 {
-    private DispatcherTimer _timer; // dispatcher.invoke goolge
-
     private bool _isPlayMode;
     public bool IsPlayMode
     {
@@ -33,11 +31,21 @@ public class MainWindowViewModel : BaseViewModel
             OnPropertyChanged(nameof(ConfigurationViewModel.ActivePack));
         }
     }
+    public QuestionPackViewModel? NewPack
+    {
+        get => _newPack;
+        set
+        {
+            _newPack = value;
+            OnPropertyChanged();
+        }
+    }
     public PlayerViewModel PlayerViewModel { get; }
     public ConfigurationViewModel ConfigurationViewModel { get; }
     public QuestionPackViewModel QuestionPackViewModel { get; }
     public QuestionViewModel QuestionViewModel { get; }
-    public QuestionPackViewModel? NewPack { get; private set; }
+
+    private QuestionPackViewModel? _newPack;
     public ObservableCollection<QuestionPackViewModel> Packs { get; } = new ObservableCollection<QuestionPackViewModel>();
 
     public ICommand ToggleFullScreenCommand { get; }
@@ -47,31 +55,27 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand SetActivePackCommand { get; }
     public ICommand CreateNewPackCommand { get; }
     public ICommand AddNewPackCommand { get; }
-    public ICommand RemoveQuestionPackCommand { get; }
+    //public ICommand RemoveQuestionPackCommand { get; }
+    private ICommand _removeQuestionPackCommand;
+    public ICommand RemoveQuestionPackCommand
+    {
+        get
+        {
+            return _removeQuestionPackCommand ??= new RelayCommand(RemoveQuestionPack, CanRemoveQuestionPack);
+        }
+    }
     public ICommand ImportQuestionsCommand { get; }
 
     public MainWindowViewModel()
     {
         ActivePack = new QuestionPackViewModel(new QuestionPack("Default Pack"));
+        Packs.Add(ActivePack);
 
         PlayerViewModel = new PlayerViewModel(this);
         ConfigurationViewModel = new ConfigurationViewModel(this);
         QuestionPackViewModel = new QuestionPackViewModel();
         QuestionViewModel = new QuestionViewModel();
-
-
-        _timer = new DispatcherTimer();
-        _timer.Interval = TimeSpan.FromSeconds(1);
-        _timer.Tick += (sender, e) => 
-        {
-            //PlayerViewModel.TimeToAnswer--;
-            //OnPropertyChanged(nameof(PlayerViewModel.TimeToAnswer)); -- maybe not needed, since in property
-            //if (PlayerViewModel.TimeToAnswer == 0)
-            //{
-            //    PlayerViewModel.Stop();
-            //}
-        };
-        _timer.Start();
+        
         _isPlayMode = false;
 
         ToggleFullScreenCommand = new RelayCommand(ToggleFullScreen);
@@ -81,7 +85,7 @@ public class MainWindowViewModel : BaseViewModel
         SetActivePackCommand = new RelayCommand(SetActivePack);
         CreateNewPackCommand = new RelayCommand(CreateNewPack);
         AddNewPackCommand = new RelayCommand(AddNewPack);
-        RemoveQuestionPackCommand = new RelayCommand(RemoveQuestionPack, CanRemoveQuestionPack);
+        //RemoveQuestionPackCommand = new RelayCommand(RemoveQuestionPack, CanRemoveQuestionPack);
         ImportQuestionsCommand = new RelayCommand(ImportQuestions, CanImportQuestions);
     }
     private void ToggleFullScreen(object obj)
@@ -124,20 +128,46 @@ public class MainWindowViewModel : BaseViewModel
     private void SetActivePack(object obj) => ActivePack = obj as QuestionPackViewModel;
     private void CreateNewPack(object obj)
     {
-        var createNewPackDialog = new CreateNewPackDialog();
+        NewPack = new QuestionPackViewModel(new QuestionPack("<PackName>"));
+        var createNewPackDialog = new CreateNewPackDialog
+        {
+            DataContext = this 
+        };
+
         if (createNewPackDialog.ShowDialog() == true)
         {
-            //Packs.Add(new QuestionPackViewModel(new QuestionPack(createNewPackDialog.PackName)));
+            Packs.Add(NewPack);
+            ActivePack = NewPack;
+            CommandManager.InvalidateRequerySuggested();
         }
-        NewPack = new QuestionPackViewModel(new QuestionPack("<PackName>"));
     }
     private void AddNewPack(object obj)
     {
-        Packs.Add(NewPack);
-        ActivePack = NewPack;
+        if (NewPack != null)
+        {
+            var newPackViewModel = new QuestionPackViewModel(new QuestionPack(NewPack.Name, NewPack.Difficulty, NewPack.TimeLimitInSeconds));
+
+            Packs.Add(newPackViewModel);
+
+            ActivePack = newPackViewModel;
+
+            CommandManager.InvalidateRequerySuggested();
+        }
+        var window = (Window)obj;
+        window.Close();
     }
     private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1;
-    private void RemoveQuestionPack(object obj) => Packs.Remove(ActivePack);
+    //private void RemoveQuestionPack(object obj) => Packs.Remove(ActivePack);
+    private void RemoveQuestionPack(object obj)
+    {
+        if (ActivePack != null)
+        {
+            Packs.Remove(ActivePack);
+            ActivePack = Packs.FirstOrDefault();
+
+            CommandManager.InvalidateRequerySuggested();
+        }
+    }
     private bool CanImportQuestions(object arg) => !_isPlayMode;
     private void ImportQuestions(object obj)
     {

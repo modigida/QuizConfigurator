@@ -61,6 +61,25 @@ public class ConfigurationViewModel : BaseViewModel
     public ICommand RemoveQuestionCommand { get; }
     public ICommand EditPackOptionsCommand { get; }
     public ICommand ClosePackOptionsCommand { get; }
+
+    public string SelectionMessage
+    {
+        get
+        {
+            if (SelectedItems.Count == 0)
+            {
+                return "No question selected";
+            }
+            else if (SelectedItems.Count > 1)
+            {
+                return "Several questions selected";
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+    }
     public ConfigurationViewModel(MainWindowViewModel mainWindowViewModel)
     {
         AddQuestionCommand = new RelayCommand(AddQuestion, CanAddQuestion);
@@ -76,6 +95,7 @@ public class ConfigurationViewModel : BaseViewModel
         var question = new QuestionViewModel(new Question("New Question", string.Empty, string.Empty, string.Empty, string.Empty));
         _mainWindowViewModel.ActivePack?.Questions.Add(question);
         ActiveQuestion = question;
+        SelectedItems.Clear();
         SelectedItems.Add(question);
     }
     private void OnSelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -85,10 +105,15 @@ public class ConfigurationViewModel : BaseViewModel
     private void SelectedItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         ActiveQuestion = SelectedItems.Count == 1 ? SelectedItems[0] : null;
+        UpdateSelectionMessage();
     }
     private void UpdateIsComponentVisible()
     {
         IsComponentVisible = ActiveQuestion != null && SelectedItems.Count == 1;
+    }
+    private void UpdateSelectionMessage()
+    {
+        OnPropertyChanged(nameof(SelectionMessage));
     }
     private bool CanRemoveQuestion(object arg) => SelectedItems != null && !_mainWindowViewModel.IsPlayMode;
     private void RemoveQuestion(object obj)

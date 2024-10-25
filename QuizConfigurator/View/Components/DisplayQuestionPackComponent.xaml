@@ -22,28 +22,31 @@
             Margin="5"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch">
-
-            <ListView
+            
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ListView
                 BorderThickness="0"
                 SelectionMode="Multiple"
-                ItemsSource="{Binding ConfigurationViewModel.ActivePack.Questions}"
+                ItemsSource="{Binding ActivePack.Questions}"
                 helper:ListViewHelper.BindableSelectedItems="{Binding ConfigurationViewModel.SelectedItems}"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
-                Margin="5">
-                <ListView.InputBindings>
-                    <KeyBinding Key="Delete" Command="{Binding ConfigurationViewModel.RemoveQuestionCommand}" />
-                </ListView.InputBindings>
+                Margin="5"
+                Background="#F0F0F0">
+                    <ListView.InputBindings>
+                        <KeyBinding Key="Delete" Command="{Binding ConfigurationViewModel.RemoveQuestionCommand}" />
+                    </ListView.InputBindings>
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="Question" FontWeight="Bold" />
-                            <TextBlock Text="{Binding Query}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="Question" FontWeight="Bold" />
+                                <TextBlock Text="{Binding Query}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
 
         </Border>
     </Grid>

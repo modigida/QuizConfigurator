@@ -85,9 +85,7 @@
             <WrapPanel
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top">
-                <Label
-                    x:Name="DisplayTextSelectedQuestion"
-                    Content="Bind to selected string" />
+                <Label Content="{Binding ConfigurationViewModel.SelectionMessage}" />
             </WrapPanel>
         </Grid>
 
