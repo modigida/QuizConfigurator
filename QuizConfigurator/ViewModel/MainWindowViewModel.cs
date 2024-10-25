@@ -9,6 +9,7 @@ using System.Windows.Threading;
 namespace QuizConfigurator.ViewModel;
 public class MainWindowViewModel : BaseViewModel
 {
+    
     private bool _isPlayMode;
     public bool IsPlayMode
     {
@@ -40,6 +41,29 @@ public class MainWindowViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
+    private string _buttonToggleContent;
+    public string ButtonToggleContent
+    {
+        get => _buttonToggleContent;
+        set
+        {
+            _buttonToggleContent = value;
+            OnPropertyChanged(nameof(ButtonToggleContent));
+        }
+    }
+    private bool _useActivePack;
+    public bool UseActivePack
+    {
+        get => _useActivePack;
+        set
+        {
+            _useActivePack = value;
+            OnPropertyChanged(nameof(CurrentPack)); // Notify that CurrentPack has changed
+            OnPropertyChanged(nameof(UseActivePack)); // Notify for the UI to reflect changes
+        }
+    }
+    public Window ParentWindow => Application.Current.MainWindow;
+    public QuestionPackViewModel CurrentPack => _useActivePack ? ActivePack : NewPack;
     public PlayerViewModel PlayerViewModel { get; }
     public ConfigurationViewModel ConfigurationViewModel { get; }
     public QuestionPackViewModel QuestionPackViewModel { get; }
@@ -54,7 +78,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand SetConfigurationModeCommand { get; }
     public ICommand SetActivePackCommand { get; }
     public ICommand CreateNewPackCommand { get; }
-    public ICommand AddNewPackCommand { get; }
+    public ICommand CurrentPackCommand { get; set; }
     //public ICommand RemoveQuestionPackCommand { get; }
     private ICommand _removeQuestionPackCommand;
     public ICommand RemoveQuestionPackCommand
@@ -84,7 +108,6 @@ public class MainWindowViewModel : BaseViewModel
         SetConfigurationModeCommand = new RelayCommand(SetConfigurationMode, CanSetConfigurationMode);
         SetActivePackCommand = new RelayCommand(SetActivePack);
         CreateNewPackCommand = new RelayCommand(CreateNewPack);
-        AddNewPackCommand = new RelayCommand(AddNewPack);
         //RemoveQuestionPackCommand = new RelayCommand(RemoveQuestionPack, CanRemoveQuestionPack);
         ImportQuestionsCommand = new RelayCommand(ImportQuestions, CanImportQuestions);
     }
@@ -128,13 +151,19 @@ public class MainWindowViewModel : BaseViewModel
     private void SetActivePack(object obj) => ActivePack = obj as QuestionPackViewModel;
     private void CreateNewPack(object obj)
     {
+        ButtonToggleContent = "Create";
+        CurrentPackCommand = new RelayCommand(AddNewPack);
+        _useActivePack = false;
+
         NewPack = new QuestionPackViewModel(new QuestionPack("<PackName>"));
-        var createNewPackDialog = new CreateNewPackDialog
+
+        var packDialog = new PackDialog
         {
-            DataContext = this 
+            Owner = ParentWindow,
+            DataContext = this
         };
 
-        if (createNewPackDialog.ShowDialog() == true)
+        if (packDialog.ShowDialog() == true)
         {
             Packs.Add(NewPack);
             ActivePack = NewPack;
@@ -153,6 +182,10 @@ public class MainWindowViewModel : BaseViewModel
 
             CommandManager.InvalidateRequerySuggested();
         }
+        ClosePackOptions(obj);
+    }
+    public void ClosePackOptions(object obj)
+    {
         var window = (Window)obj;
         window.Close();
     }

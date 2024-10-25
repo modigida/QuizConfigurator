@@ -6,6 +6,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace QuizConfigurator.ViewModel;
 public class ConfigurationViewModel : BaseViewModel
@@ -85,7 +87,7 @@ public class ConfigurationViewModel : BaseViewModel
         AddQuestionCommand = new RelayCommand(AddQuestion, CanAddQuestion);
         RemoveQuestionCommand = new RelayCommand(RemoveQuestion, CanRemoveQuestion);
         EditPackOptionsCommand = new RelayCommand(EditPackOptions, CanEditPackOptions);
-        ClosePackOptionsCommand = new RelayCommand(ClosePackOptions);
+        ClosePackOptionsCommand = new RelayCommand(mainWindowViewModel.ClosePackOptions);
         _mainWindowViewModel = mainWindowViewModel;
         SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
     }
@@ -131,15 +133,31 @@ public class ConfigurationViewModel : BaseViewModel
     private bool CanEditPackOptions(object arg) => !_mainWindowViewModel.IsPlayMode;
     private void EditPackOptions(object obj)
     {
-        var packOptions = new PackOptionsDialog();
-        if (packOptions.ShowDialog() == true)
+        _mainWindowViewModel.ButtonToggleContent = "Edit";
+        _mainWindowViewModel.CurrentPackCommand = new RelayCommand(SaveEditPackOptions);
+        _mainWindowViewModel.UseActivePack = true;
+        var packDialog = new PackDialog
         {
+            Owner = _mainWindowViewModel.ParentWindow,
+            DataContext = _mainWindowViewModel
+        };
 
+        if (packDialog.ShowDialog() == true)
+        {
+            OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
+            CommandManager.InvalidateRequerySuggested();
         }
+
     }
-    private void ClosePackOptions(object obj)
+    // Continue here
+    private void SaveEditPackOptions(object obj)
     {
-        var window = (Window)obj;
-        window.Close();
+        if (_mainWindowViewModel.ActivePack != null)
+        {
+            OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
+        }
+        _mainWindowViewModel.ClosePackOptions(obj);
     }
+
+    
 }

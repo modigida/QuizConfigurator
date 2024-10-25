@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuizConfigurator.View.Dialogs"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
         Title="Import Question From Open Trivia Database" Height="350" Width="300">
     <Grid Margin="5">
         <Grid.RowDefinitions>

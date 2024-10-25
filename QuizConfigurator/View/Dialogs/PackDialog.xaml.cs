@@ -2,9 +2,9 @@
 using System.Windows;
 
 namespace QuizConfigurator.View.Dialogs;
-public partial class PackOptionsDialog : Window
+public partial class PackDialog : Window
 {
-    public PackOptionsDialog()
+    public PackDialog()
     {
         InitializeComponent();
         DataContext = new MainWindowViewModel();
