@@ -78,9 +78,7 @@ public class PlayerViewModel : BaseViewModel
     public ICommand SetSoundSettingCommand { get; }
     public PlayerViewModel(MainWindowViewModel? mainWindowViewModel)
     {
-        _speechSynthesizer = new SpeechSynthesizer();
-        _speechSynthesizer.SetOutputToDefaultAudioDevice();
-        _speechSynthesizer.Rate = 3;
+        CreateVoiceFeature();
 
         MainWindowViewModel = mainWindowViewModel;
 
@@ -91,6 +89,14 @@ public class PlayerViewModel : BaseViewModel
         PickAnswerCommand = new RelayCommand(PickAnswer);
         RestartGameCommand = new RelayCommand(RestartGame);
         SetSoundSettingCommand = new RelayCommand(ToggleSound);
+
+        _isSoundOn = true;
+    }
+    private void CreateVoiceFeature()
+    {
+        _speechSynthesizer = new SpeechSynthesizer();
+        _speechSynthesizer.SetOutputToDefaultAudioDevice();
+        _speechSynthesizer.SelectVoice("Microsoft Zira Desktop");
     }
     private void ToggleSound(object obj)
     {
@@ -141,8 +147,10 @@ public class PlayerViewModel : BaseViewModel
             CurrentAnswerOptions = allAnswers.OrderBy(a => random.Next()).ToList();
 
             _correctAnswerIndex = CurrentAnswerOptions.IndexOf(CurrentQuestion.CorrectAnswer);
-
-            StartTimer();
+             
+            StartTimer(); 
+            Task.Delay(15);
+            ReadQuestion();
         }
         else
         {
@@ -162,7 +170,8 @@ public class PlayerViewModel : BaseViewModel
         }
         else
         {
-            _timer.Stop(); 
+            _timer.Stop();
+            LoadNextQuestion();
         }
     }
     private void PickAnswer(object selectedAnswer)
@@ -186,6 +195,7 @@ public class PlayerViewModel : BaseViewModel
     private void RestartGame(object obj) => Start();
     public void Stop()
     {
+        _timer.Stop();
         IsPlaying = false;
         MainWindowViewModel.IsPlayMode = false;
     }

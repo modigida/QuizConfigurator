@@ -193,7 +193,9 @@
 
             <Button 
                 Content="{Binding CurrentAnswerOptions[0]}" 
+                CommandParameter="{Binding CurrentAnswerOptions[0]}"
                 Style="{StaticResource AnswereButton}"
+                Command="{Binding PickAnswerCommand}"
                 Width="200"    
                 Height="70"  
                 Margin="10" 
@@ -202,7 +204,9 @@
                 TabIndex="1"/>
             <Button 
                 Content="{Binding CurrentAnswerOptions[1]}" 
+                CommandParameter="{Binding CurrentAnswerOptions[1]}"
                 Style="{StaticResource AnswereButton}"
+                Command="{Binding PickAnswerCommand}"
                 Width="200" 
                 Height="70"  
                 Margin="10" 
@@ -211,7 +215,9 @@
                 TabIndex="2"/>
             <Button 
                 Content="{Binding CurrentAnswerOptions[2]}" 
+                CommandParameter="{Binding CurrentAnswerOptions[2]}"
                 Style="{StaticResource AnswereButton}"
+                Command="{Binding PickAnswerCommand}"
                 Width="200" 
                 Height="70"   
                 Margin="10" 
@@ -220,7 +226,9 @@
                 TabIndex="3"/>
             <Button 
                 Content="{Binding CurrentAnswerOptions[3]}" 
+                CommandParameter="{Binding CurrentAnswerOptions[3]}"
                 Style="{StaticResource AnswereButton}"
+                Command="{Binding PickAnswerCommand}"
                 Width="200" 
                 Height="70"  
                 Margin="10" 
