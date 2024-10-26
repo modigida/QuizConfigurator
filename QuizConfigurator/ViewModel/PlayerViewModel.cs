@@ -1,5 +1,6 @@
 ﻿using QuizConfigurator.Commands;
 using System.Speech.Synthesis;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -103,21 +104,27 @@ public class PlayerViewModel : BaseViewModel
         _isSoundOn = !_isSoundOn;
         OnPropertyChanged(nameof(IsSoundOn));
     }
-    public async Task ReadQuestion()
+    public async Task ExecuteVoice(string textToRead)
     {
         if (_isSoundOn && CurrentQuestion != null)
         {
-            await Task.Run(() => _speechSynthesizer.Speak(CurrentQuestion.Query));
+            await Task.Run(() => _speechSynthesizer.Speak(textToRead));
         }
-    }
-    public void StartQuiz(List<QuestionViewModel> questions)
-    {
-        InitializeQuestions(questions);
-        Start();
     }
     public void Start()
     {
-        if(MainWindowViewModel.ActivePack != null)
+        var result = MessageBox.Show("Play with sound?", "Sound Setting", MessageBoxButton.YesNo);
+        if (result == MessageBoxResult.Yes)
+        {
+            _isSoundOn = true;
+            OnPropertyChanged(nameof(IsSoundOn));
+        }
+        else
+        {
+            _isSoundOn = false;
+            OnPropertyChanged(nameof(IsSoundOn));
+        }
+        if (MainWindowViewModel.ActivePack != null)
         {
             _randomizedQuestions = MainWindowViewModel.ActivePack.Questions.ToList();
             InitializeQuestions(_randomizedQuestions);
@@ -131,7 +138,7 @@ public class PlayerViewModel : BaseViewModel
         CurrentQuestionNumber = 0;
         LoadNextQuestion();
     }
-    private void LoadNextQuestion()
+    private async Task LoadNextQuestion()
     {
         if (CurrentQuestionNumber < _randomizedQuestions.Count)
         {
@@ -149,8 +156,13 @@ public class PlayerViewModel : BaseViewModel
             _correctAnswerIndex = CurrentAnswerOptions.IndexOf(CurrentQuestion.CorrectAnswer);
              
             StartTimer(); 
-            Task.Delay(15);
-            ReadQuestion();
+
+            if(IsSoundOn)
+            {
+                await Task.Delay(500);
+                string stringToRead = CurrentQuestion.Query;
+                await ExecuteVoice(stringToRead);
+            }
         }
         else
         {
@@ -174,21 +186,31 @@ public class PlayerViewModel : BaseViewModel
             LoadNextQuestion();
         }
     }
-    private void PickAnswer(object selectedAnswer)
+    private async void PickAnswer(object selectedAnswer)
     {
         if (_timer.IsEnabled)
         {
             _timer.Stop();
-
-            if (selectedAnswer is string answer)
+            await CheckAnswer(selectedAnswer);
+            LoadNextQuestion();
+        }
+    }
+    private async Task CheckAnswer(object selectedAnswer)
+    {
+        if (selectedAnswer is string answer)
+        {
+            if (answer == CurrentQuestion.CorrectAnswer)
             {
-                if (answer == CurrentQuestion.CorrectAnswer)
-                {
-                    AmountOfCorrectAnswers++;
-                }
-
-                // Show Icons for wrong or corrct answer 
-                LoadNextQuestion();
+                await ExecuteVoice("Correct");
+                // Icon for correct answer
+                //await Task.Delay(1000);
+                AmountOfCorrectAnswers++;
+            }
+            else
+            {
+                await ExecuteVoice("Wrong answer");
+                // Icon for wrong answer
+                //await Task.Delay(1000);
             }
         }
     }

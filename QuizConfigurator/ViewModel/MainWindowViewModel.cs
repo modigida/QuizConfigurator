@@ -63,7 +63,7 @@ public class MainWindowViewModel : BaseViewModel
         }
     }
     public Window ParentWindow => Application.Current.MainWindow;
-    public QuestionPackViewModel CurrentPack => _useActivePack ? ActivePack : NewPack;
+    public QuestionPackViewModel? CurrentPack => _useActivePack ? ActivePack : NewPack;
     public PlayerViewModel PlayerViewModel { get; }
     public ConfigurationViewModel ConfigurationViewModel { get; }
     public QuestionPackViewModel QuestionPackViewModel { get; }

@@ -115,7 +115,6 @@
                 Orientation="Horizontal" 
                 DataContext="{Binding PlayerViewModel}"
                 Margin="10,0">
-                <!-- Ljud På Knapp -->
                 <Button 
                     Command="{Binding SetSoundSettingCommand}" 
                     Visibility="{Binding IsSoundOn, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -127,7 +126,6 @@
                     </Button.Content>
                 </Button>
 
-                <!-- Ljud Av Knapp -->
                 <Button 
                     Command="{Binding SetSoundSettingCommand}" 
                     Visibility="{Binding IsSoundOn, Converter={StaticResource InverseBoolToVisibilityConverter}}"
