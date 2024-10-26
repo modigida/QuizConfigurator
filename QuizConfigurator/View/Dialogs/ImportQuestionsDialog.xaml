@@ -72,16 +72,16 @@
         </Grid>
 
         <StackPanel 
-    Grid.Row="3" 
-    Orientation="Horizontal" 
-    HorizontalAlignment="Center">
+            Grid.Row="3" 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Center">
             <Button 
         Content="Cancel" 
         Width="50" 
         Height="20"
         Margin="0,0,15,0"
         Command="{Binding CancelCommand}"
-CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
             <Button 
         Content="Import" 
         Width="50" 

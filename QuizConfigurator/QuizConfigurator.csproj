@@ -14,11 +14,12 @@
 
   <ItemGroup>
     <Folder Include="Json\" />
-    <Folder Include="OpenTrivia\" />
+    <Folder Include="API\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
+    <PackageReference Include="System.Speech" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

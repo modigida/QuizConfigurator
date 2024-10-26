@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QuizConfigurator.View"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:local="clr-namespace:QuizConfigurator.View" 
+             xmlns:viewmodel="clr-namespace:QuizConfigurator.ViewModel" 
+             xmlns:converters="clr-namespace:QuizConfigurator.Converters" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Background="#F0F0F0">
@@ -11,7 +15,7 @@
     <UserControl.Resources>
 
         <!-- Button styling -->
-        <Style TargetType="Button">
+        <Style TargetType="Button" x:Key="AnswereButton">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Background" Value="#E9967A"/>
             <Setter Property="Foreground" Value="Black"/>
@@ -65,8 +69,34 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="RoundButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Fill="{TemplateBinding Background}" />
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Background" Value="SkyBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+        
     </UserControl.Resources>
-    
+
     <Grid Height="450">
         
         <Grid.RowDefinitions>
@@ -80,12 +110,41 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            
+            <StackPanel 
+                Orientation="Horizontal" 
+                DataContext="{Binding PlayerViewModel}"
+                Margin="10,0">
+                <!-- Ljud På Knapp -->
+                <Button 
+                    Command="{Binding SetSoundSettingCommand}" 
+                    Visibility="{Binding IsSoundOn, Converter={StaticResource BoolToVisibilityConverter}}"
+                    HorizontalAlignment="Left" 
+                    TabIndex="0"
+                    Width="45">
+                    <Button.Content>
+                        <fa:IconBlock Icon="VolumeHigh"/>
+                    </Button.Content>
+                </Button>
+
+                <!-- Ljud Av Knapp -->
+                <Button 
+                    Command="{Binding SetSoundSettingCommand}" 
+                    Visibility="{Binding IsSoundOn, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+                    HorizontalAlignment="Left" 
+                    TabIndex="0"
+                    Width="45">
+                    <Button.Content>
+                        <fa:IconBlock Icon="VolumeMute"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
 
             <Grid 
                 Grid.Row="0" 
                 HorizontalAlignment="Stretch">
                 <TextBlock 
-                    Text="12" 
+                    Text="{Binding PlayerViewModel.RemainingTime}" 
                     FontSize="34" 
                     FontWeight="Bold"
                     Width="40"
@@ -98,17 +157,18 @@
                 Orientation="Horizontal" 
                 Width="500">
                 <TextBlock 
-                    Text="This is where the question will be shown" 
+                    Text="{Binding PlayerViewModel.CurrentQuestion.Query}" 
                     FontSize="34" 
                     TextWrapping="Wrap" 
                     TextAlignment="Center"/>
+                
             </WrapPanel>
 
             <DockPanel 
                 Grid.Row="2"
                 Width="500">
                 <TextBlock 
-                    Text="Question 1 of 7" 
+                    Text="{Binding PlayerViewModel.CurrentQuestionNumber}" 
                     FontSize="14" 
                     HorizontalAlignment="Stretch"
                     TextAlignment="Center"
@@ -120,7 +180,8 @@
             Grid.Row="1" 
             Width="450" 
             Height="200"
-            Margin="0,30,0,0">
+            Margin="0,30,0,0"
+            DataContext="{Binding PlayerViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -131,33 +192,41 @@
             </Grid.ColumnDefinitions>
 
             <Button 
-                Content="Answer 1" 
+                Content="{Binding CurrentAnswerOptions[0]}" 
+                Style="{StaticResource AnswereButton}"
                 Width="200"    
                 Height="70"  
                 Margin="10" 
                 Grid.Row="0" 
-                Grid.Column="0"/>
+                Grid.Column="0"
+                TabIndex="1"/>
             <Button 
-                Content="Answer 2" 
+                Content="{Binding CurrentAnswerOptions[1]}" 
+                Style="{StaticResource AnswereButton}"
                 Width="200" 
                 Height="70"  
                 Margin="10" 
                 Grid.Row="0" 
-                Grid.Column="1"/>
+                Grid.Column="1"
+                TabIndex="2"/>
             <Button 
-                Content="Answer 3" 
+                Content="{Binding CurrentAnswerOptions[2]}" 
+                Style="{StaticResource AnswereButton}"
                 Width="200" 
                 Height="70"   
                 Margin="10" 
                 Grid.Row="1" 
-                Grid.Column="0"/>
+                Grid.Column="0"
+                TabIndex="3"/>
             <Button 
-                Content="Answer 4" 
+                Content="{Binding CurrentAnswerOptions[3]}" 
+                Style="{StaticResource AnswereButton}"
                 Width="200" 
                 Height="70"  
                 Margin="10" 
                 Grid.Row="1" 
-                Grid.Column="1"/>
+                Grid.Column="1"
+                TabIndex="4"/>
         </Grid>
 
     </Grid>

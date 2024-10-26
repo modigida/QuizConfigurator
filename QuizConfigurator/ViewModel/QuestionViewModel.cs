@@ -1,5 +1,4 @@
-﻿
-using QuizConfigurator.Model;
+﻿using QuizConfigurator.Model;
 using System.Collections.ObjectModel;
 
 namespace QuizConfigurator.ViewModel;

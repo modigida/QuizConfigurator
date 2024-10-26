@@ -2,9 +2,9 @@
 using QuizConfigurator.Model;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
+using System.Speech.Synthesis;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace QuizConfigurator.ViewModel;
 public class MainWindowViewModel : BaseViewModel

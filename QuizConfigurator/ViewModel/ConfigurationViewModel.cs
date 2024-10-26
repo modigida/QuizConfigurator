@@ -79,6 +79,7 @@ public class ConfigurationViewModel : BaseViewModel
             }
         }
     }
+
     public ConfigurationViewModel(MainWindowViewModel mainWindowViewModel)
     {
         AddQuestionCommand = new RelayCommand(AddQuestion, CanAddQuestion);
