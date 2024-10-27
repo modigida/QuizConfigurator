@@ -166,7 +166,7 @@
                 Grid.Row="2"
                 Width="500">
                 <TextBlock 
-                    Text="{Binding PlayerViewModel.CurrentQuestionNumber}" 
+                    Text="{Binding PlayerViewModel.CurrentQuestionInOrder}" 
                     FontSize="14" 
                     HorizontalAlignment="Stretch"
                     TextAlignment="Center"

@@ -12,7 +12,9 @@ public class PlayerViewModel : BaseViewModel
 
     private DispatcherTimer _timer;
 
+    private int _correctAnswerIndex;
     private List<QuestionViewModel>? _randomizedQuestions;
+
     private QuestionViewModel _currentQuestion;
     public QuestionViewModel CurrentQuestion
     {
@@ -35,12 +37,38 @@ public class PlayerViewModel : BaseViewModel
         }
     }
 
-    private int _correctAnswerIndex;
-    public int CurrentQuestionNumber { get; set; }
-    public int AmountOfCorrectAnswers { get; set; }
+    private int _currentQuestionNumber;
+    public int CurrentQuestionNumber
+    {
+        get => _currentQuestionNumber;
+        set
+        {
+            _currentQuestionNumber = value;
+            OnPropertyChanged();
+            CurrentQuestionInOrder = $"Question {_currentQuestionNumber} of {_amountOfQuestions}"; 
+        }
+    }
+    
+    private int _amountOfQuestions;
     public int AmountOfQuestions
     {
         get => _randomizedQuestions?.Count ?? 0;
+        set
+        {
+            _amountOfQuestions = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private string _currentQuestionNumberInOrder;
+    public string CurrentQuestionInOrder
+    {
+        get => $"Question {CurrentQuestionNumber} of {AmountOfQuestions}";
+        private set 
+        {
+            _currentQuestionNumberInOrder = value;
+            OnPropertyChanged();
+        }
     }
 
     private int _remainingTime;
@@ -53,6 +81,7 @@ public class PlayerViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
+
     private bool _isPlaying;
     public bool IsPlaying
     {
@@ -63,6 +92,7 @@ public class PlayerViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
+
     private bool _isSoundOn;
     public bool IsSoundOn
     {
@@ -73,9 +103,13 @@ public class PlayerViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
+
+    public int AmountOfCorrectAnswers { get; set; }
+
     public ICommand PickAnswerCommand { get; }
     public ICommand RestartGameCommand { get; }
     public ICommand SetSoundSettingCommand { get; }
+
     public PlayerViewModel(MainWindowViewModel mainWindowViewModel)
     {
         CreateVoiceFeature();
