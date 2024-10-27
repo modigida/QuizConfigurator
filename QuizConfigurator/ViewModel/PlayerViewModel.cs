@@ -180,12 +180,29 @@ public class PlayerViewModel : BaseViewModel
     {
         if (RemainingTime > 0)
         {
+            if (RemainingTime <= 6 && IsSoundOn)
+            {
+                PlayTickSound();
+            }
+
             RemainingTime--;
         }
         else
         {
             _timer.Stop();
             LoadNextQuestion();
+        }
+    }
+    private void PlayTickSound()
+    {
+        try
+        {
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer("Resources\\tick.wav");
+            player.Play();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Kunde inte spela tick-ljudet: " + ex.Message);
         }
     }
     private async void PickAnswer(object selectedAnswer)

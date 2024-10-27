@@ -10,6 +10,13 @@
 
   <ItemGroup>
     <None Remove="q_icon.ico" />
+    <None Remove="Resources\tick.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\tick.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -23,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Icons\q_icon.ico" />
+    <Resource Include="Resources\q_icon.ico" />
   </ItemGroup>
 
 </Project>
