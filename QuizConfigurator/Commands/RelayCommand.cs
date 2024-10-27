@@ -10,8 +10,10 @@ public class RelayCommand : ICommand
     {
         _execute = execute;
         _canExecute = canExecute ?? (x => true);
+
+        CommandManager.RequerySuggested += (sender, e) => RaiseCanExecuteChanged();
     }
-    public bool CanExecute(object parameter) => _canExecute is null ? true : _canExecute(parameter);
-    public void Execute(object parameter) => _execute(parameter);
+    public bool CanExecute(object? parameter) => _canExecute(parameter!);
+    public void Execute(object? parameter) => _execute(parameter!);
     public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }

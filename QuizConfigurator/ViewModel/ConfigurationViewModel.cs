@@ -48,9 +48,8 @@ public class ConfigurationViewModel : BaseViewModel
             if (_selectedItems != null)
             {
                 _selectedItems.CollectionChanged += SelectedItems_CollectionChanged;
+                ActiveQuestion = _selectedItems.Count == 1 ? _selectedItems[0] : null;
             }
-
-            ActiveQuestion = _selectedItems.Count == 1 ? _selectedItems[0] : null;
 
             OnPropertyChanged();
         }
@@ -102,9 +101,9 @@ public class ConfigurationViewModel : BaseViewModel
     {
         ActiveQuestion = _selectedItems.Count == 1 ? _selectedItems[0] : null;
     }
-    private void SelectedItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void SelectedItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        ActiveQuestion = SelectedItems.Count == 1 ? SelectedItems[0] : null;
+        ActiveQuestion = SelectedItems.Count == 1 ? SelectedItems.FirstOrDefault() : null;
         UpdateSelectionMessage();
     }
     private void UpdateIsComponentVisible()

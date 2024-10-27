@@ -7,13 +7,12 @@ using System.Windows.Threading;
 namespace QuizConfigurator.ViewModel;
 public class PlayerViewModel : BaseViewModel
 {
-    private SpeechSynthesizer _speechSynthesizer;
-    public readonly MainWindowViewModel? MainWindowViewModel;
+    private SpeechSynthesizer? _speechSynthesizer;
+    public readonly MainWindowViewModel MainWindowViewModel;
 
-    private DispatcherTimer _timer; 
+    private DispatcherTimer _timer;
 
     private List<QuestionViewModel>? _randomizedQuestions;
-    //private List<string>? _randomizedAnswers;
     private QuestionViewModel _currentQuestion;
     public QuestionViewModel CurrentQuestion
     {
@@ -39,9 +38,9 @@ public class PlayerViewModel : BaseViewModel
     private int _correctAnswerIndex;
     public int CurrentQuestionNumber { get; set; }
     public int AmountOfCorrectAnswers { get; set; }
-    public int AmoundOfQuestions
+    public int AmountOfQuestions
     {
-        get => _randomizedQuestions.Count != null ? _randomizedQuestions.Count : 0;
+        get => _randomizedQuestions?.Count ?? 0;
     }
 
     private int _remainingTime;
@@ -51,7 +50,7 @@ public class PlayerViewModel : BaseViewModel
         private set
         {
             _remainingTime = value;
-            OnPropertyChanged(); 
+            OnPropertyChanged();
         }
     }
     private bool _isPlaying;
@@ -77,7 +76,7 @@ public class PlayerViewModel : BaseViewModel
     public ICommand PickAnswerCommand { get; }
     public ICommand RestartGameCommand { get; }
     public ICommand SetSoundSettingCommand { get; }
-    public PlayerViewModel(MainWindowViewModel? mainWindowViewModel)
+    public PlayerViewModel(MainWindowViewModel mainWindowViewModel)
     {
         CreateVoiceFeature();
 
@@ -86,7 +85,7 @@ public class PlayerViewModel : BaseViewModel
         _timer = new DispatcherTimer();
         _timer.Interval = TimeSpan.FromSeconds(1);
         _timer.Tick += Timer_Tick;
-        
+
         PickAnswerCommand = new RelayCommand(PickAnswer);
         RestartGameCommand = new RelayCommand(RestartGame);
         SetSoundSettingCommand = new RelayCommand(ToggleSound);
@@ -106,14 +105,14 @@ public class PlayerViewModel : BaseViewModel
     }
     public async Task ExecuteVoice(string textToRead)
     {
-        if (_isSoundOn && CurrentQuestion != null)
+        if (_isSoundOn && CurrentQuestion != null && _speechSynthesizer != null)
         {
             await Task.Run(() => _speechSynthesizer.Speak(textToRead));
         }
     }
     public void Start()
     {
-        var result = MessageBox.Show("Play with sound?", "Sound Setting", MessageBoxButton.YesNo);
+        var result = MessageBox.Show("Play with sound?", "Sound Setting", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result == MessageBoxResult.Yes)
         {
             _isSoundOn = true;
@@ -140,7 +139,7 @@ public class PlayerViewModel : BaseViewModel
     }
     private async Task LoadNextQuestion()
     {
-        if (CurrentQuestionNumber < _randomizedQuestions.Count)
+        if (_randomizedQuestions != null && CurrentQuestionNumber < _randomizedQuestions.Count)
         {
             CurrentQuestion = _randomizedQuestions[CurrentQuestionNumber];
             CurrentQuestionNumber++;
@@ -154,10 +153,10 @@ public class PlayerViewModel : BaseViewModel
             CurrentAnswerOptions = allAnswers.OrderBy(a => random.Next()).ToList();
 
             _correctAnswerIndex = CurrentAnswerOptions.IndexOf(CurrentQuestion.CorrectAnswer);
-             
-            StartTimer(); 
 
-            if(IsSoundOn)
+            StartTimer();
+
+            if (IsSoundOn)
             {
                 await Task.Delay(500);
                 string stringToRead = CurrentQuestion.Query;
@@ -166,19 +165,22 @@ public class PlayerViewModel : BaseViewModel
         }
         else
         {
-            Stop(); 
+            Stop();
         }
     }
     public void StartTimer()
     {
-        RemainingTime = MainWindowViewModel.ActivePack.TimeLimitInSeconds; 
-        _timer.Start(); 
+        if (MainWindowViewModel.ActivePack != null)
+        {
+            RemainingTime = MainWindowViewModel.ActivePack.TimeLimitInSeconds;
+            _timer.Start();
+        }
     }
     private void Timer_Tick(object sender, EventArgs e)
     {
         if (RemainingTime > 0)
         {
-            RemainingTime--; 
+            RemainingTime--;
         }
         else
         {

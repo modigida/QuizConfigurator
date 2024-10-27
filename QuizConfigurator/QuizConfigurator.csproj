@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="q_icon.ico" />
+    <Resource Include="Icons\q_icon.ico" />
   </ItemGroup>
 
 </Project>

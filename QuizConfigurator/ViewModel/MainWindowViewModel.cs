@@ -9,7 +9,7 @@ using System.Windows.Input;
 namespace QuizConfigurator.ViewModel;
 public class MainWindowViewModel : BaseViewModel
 {
-    
+
     private bool _isPlayMode;
     public bool IsPlayMode
     {
@@ -70,7 +70,17 @@ public class MainWindowViewModel : BaseViewModel
     public QuestionViewModel QuestionViewModel { get; }
 
     private QuestionPackViewModel? _newPack;
-    public ObservableCollection<QuestionPackViewModel> Packs { get; } = new ObservableCollection<QuestionPackViewModel>();
+    private ObservableCollection<QuestionPackViewModel> _packs;
+    public ObservableCollection<QuestionPackViewModel> Packs
+    {
+        get => _packs;
+        set
+        {
+            _packs = value;
+            OnPropertyChanged();
+            CommandManager.InvalidateRequerySuggested();
+        }
+    }
 
     public ICommand ToggleFullScreenCommand { get; }
     public ICommand ExitProgramCommand { get; }
@@ -92,6 +102,9 @@ public class MainWindowViewModel : BaseViewModel
 
     public MainWindowViewModel()
     {
+        Packs = new ObservableCollection<QuestionPackViewModel>();
+        Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
+
         ActivePack = new QuestionPackViewModel(new QuestionPack("Default Pack"));
         Packs.Add(ActivePack);
 
@@ -99,7 +112,7 @@ public class MainWindowViewModel : BaseViewModel
         ConfigurationViewModel = new ConfigurationViewModel(this);
         QuestionPackViewModel = new QuestionPackViewModel();
         QuestionViewModel = new QuestionViewModel();
-        
+
         _isPlayMode = false;
 
         ToggleFullScreenCommand = new RelayCommand(ToggleFullScreen);
@@ -134,7 +147,7 @@ public class MainWindowViewModel : BaseViewModel
         if (result == MessageBoxResult.Yes)
         {
             Application.Current.Shutdown();
-        } 
+        }
     }
     private bool CanSetPlayMode(object arg) => !_isPlayMode && ActivePack.Questions.Count > 0;
     private void SetPlayMode(object obj)
@@ -148,7 +161,12 @@ public class MainWindowViewModel : BaseViewModel
         IsPlayMode = false;
         PlayerViewModel.Stop();
     }
-    private void SetActivePack(object obj) => ActivePack = obj as QuestionPackViewModel;
+    //private void SetActivePack(object obj) => ActivePack = obj as QuestionPackViewModel;
+    private void SetActivePack(object obj)
+    {
+        ActivePack = obj as QuestionPackViewModel;
+        CommandManager.InvalidateRequerySuggested(); // Uppdaterar kommandonas status
+    }
     private void CreateNewPack(object obj)
     {
         ButtonToggleContent = "Create";
@@ -195,9 +213,14 @@ public class MainWindowViewModel : BaseViewModel
     {
         if (ActivePack != null)
         {
-            Packs.Remove(ActivePack);
-            ActivePack = Packs.FirstOrDefault();
-
+            MessageBoxResult result;
+            var messageDeletePack = $"Sure to delete {ActivePack.Name}?";
+            result = MessageBox.Show(messageDeletePack, "Delete Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                Packs.Remove(ActivePack);
+                ActivePack = Packs.FirstOrDefault();
+            }
             CommandManager.InvalidateRequerySuggested();
         }
     }
