@@ -48,7 +48,18 @@ public class PlayerViewModel : BaseViewModel
             CurrentQuestionInOrder = $"Question {_currentQuestionNumber} of {_amountOfQuestions}"; 
         }
     }
-    
+    private string _resultString;
+    public string ResultString
+    {
+        get => $"You got {AmountOfCorrectAnswers} out of {AmountOfQuestions} answers correct!";
+        set
+        {
+            _resultString = value;
+            OnPropertyChanged();
+            
+        }
+    }
+
     private int _amountOfQuestions;
     public int AmountOfQuestions
     {
@@ -92,6 +103,16 @@ public class PlayerViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
+    private bool _isGameOver;
+    public bool IsGameOver
+    {
+        get => _isGameOver;
+        set
+        {
+            _isGameOver = value;
+            OnPropertyChanged();
+        }
+    }
 
     private bool _isSoundOn;
     public bool IsSoundOn
@@ -104,7 +125,30 @@ public class PlayerViewModel : BaseViewModel
         }
     }
 
-    public int AmountOfCorrectAnswers { get; set; }
+    private bool _isAnswerCorrect;
+    public bool IsAnswerCorrect
+    {
+        get => _isAnswerCorrect;
+        set
+        {
+            _isAnswerCorrect = value;
+            OnPropertyChanged();
+            
+        }
+    }
+
+    private int _amountOfCorrectAnswers;
+    public int AmountOfCorrectAnswers
+    {
+        get => _amountOfCorrectAnswers;
+
+        set
+        {
+            _amountOfCorrectAnswers = value;
+            OnPropertyChanged();
+            ResultString = $"You got {AmountOfCorrectAnswers} out of {_amountOfQuestions} answers correct";
+        }
+    }
 
     public ICommand PickAnswerCommand { get; }
     public ICommand RestartGameCommand { get; }
@@ -146,6 +190,8 @@ public class PlayerViewModel : BaseViewModel
     }
     public void Start()
     {
+        IsGameOver = false;
+
         var result = MessageBox.Show("Play with sound?", "Sound Setting", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result == MessageBoxResult.Yes)
         {
@@ -199,7 +245,8 @@ public class PlayerViewModel : BaseViewModel
         }
         else
         {
-            Stop();
+            IsGameOver = true;
+            _timer.Stop();
         }
     }
     public void StartTimer()
@@ -252,26 +299,28 @@ public class PlayerViewModel : BaseViewModel
     {
         if (selectedAnswer is string answer)
         {
-            if (answer == CurrentQuestion.CorrectAnswer)
+            IsAnswerCorrect = answer == CurrentQuestion.CorrectAnswer;
+            if (IsAnswerCorrect)
             {
                 await ExecuteVoice("Correct");
-                // Icon for correct answer
-                //await Task.Delay(1000);
                 AmountOfCorrectAnswers++;
             }
             else
             {
                 await ExecuteVoice("Wrong answer");
-                // Icon for wrong answer
-                //await Task.Delay(1000);
             }
+            await Task.Delay(1000);
         }
     }
     private void RestartGame(object obj) => Start();
+
+    // Method maybe not needed
     public void Stop()
     {
         _timer.Stop();
         IsPlaying = false;
+
+        // If not restarting program
         MainWindowViewModel.IsPlayMode = false;
     }
 }

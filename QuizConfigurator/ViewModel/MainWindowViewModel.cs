@@ -79,6 +79,8 @@ public class MainWindowViewModel : BaseViewModel
             _packs = value;
             OnPropertyChanged();
             CommandManager.InvalidateRequerySuggested();
+            // Serialize list to Json file here, will write over. Can be made when exiting program
+            // but if program crashed data will get lost
         }
     }
 
@@ -102,6 +104,8 @@ public class MainWindowViewModel : BaseViewModel
 
     public MainWindowViewModel()
     {
+        // Read packs from Json file here 
+
         Packs = new ObservableCollection<QuestionPackViewModel>();
         Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
 
@@ -159,13 +163,12 @@ public class MainWindowViewModel : BaseViewModel
     private void SetConfigurationMode(object obj)
     {
         IsPlayMode = false;
-        PlayerViewModel.Stop();
+        //PlayerViewModel.Stop();
     }
-    //private void SetActivePack(object obj) => ActivePack = obj as QuestionPackViewModel;
     private void SetActivePack(object obj)
     {
         ActivePack = obj as QuestionPackViewModel;
-        CommandManager.InvalidateRequerySuggested(); // Uppdaterar kommandonas status
+        CommandManager.InvalidateRequerySuggested();
     }
     private void CreateNewPack(object obj)
     {

@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <None Remove="q_icon.ico" />
+    <None Remove="Resources\correct.png" />
+    <None Remove="Resources\incorrect.png" />
     <None Remove="Resources\tick.wav" />
   </ItemGroup>
 
@@ -30,6 +32,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\correct.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\incorrect.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\q_icon.ico" />
   </ItemGroup>
 

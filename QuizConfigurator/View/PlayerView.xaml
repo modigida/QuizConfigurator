@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
-             xmlns:local="clr-namespace:QuizConfigurator.View" 
-             xmlns:viewmodel="clr-namespace:QuizConfigurator.ViewModel" 
+             xmlns:viewmodel="clr-namespace:QuizConfigurator.ViewModel"
              xmlns:converters="clr-namespace:QuizConfigurator.Converters" 
              d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
@@ -97,143 +96,193 @@
         
     </UserControl.Resources>
 
-    <Grid Height="450">
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0">
+    <Grid>
+        <Grid Visibility="{Binding PlayerViewModel.IsGameOver, Converter={StaticResource InverseBoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
-            <StackPanel 
-                Orientation="Horizontal" 
-                DataContext="{Binding PlayerViewModel}"
-                Margin="10,0">
-                <Button 
-                    Command="{Binding SetSoundSettingCommand}" 
-                    Visibility="{Binding IsSoundOn, Converter={StaticResource BoolToVisibilityConverter}}"
-                    HorizontalAlignment="Left" 
-                    TabIndex="0"
-                    Width="45">
-                    <Button.Content>
-                        <fa:IconBlock Icon="VolumeHigh"/>
-                    </Button.Content>
-                </Button>
 
-                <Button 
-                    Command="{Binding SetSoundSettingCommand}" 
-                    Visibility="{Binding IsSoundOn, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-                    HorizontalAlignment="Left" 
-                    TabIndex="0"
-                    Width="45">
-                    <Button.Content>
-                        <fa:IconBlock Icon="VolumeMute"/>
-                    </Button.Content>
-                </Button>
-            </StackPanel>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <StackPanel 
+                    Orientation="Horizontal" 
+                    DataContext="{Binding PlayerViewModel}"
+                    Margin="10,0">
+                    <Button 
+                        Command="{Binding SetSoundSettingCommand}" 
+                        Visibility="{Binding IsSoundOn, Converter={StaticResource BoolToVisibilityConverter}}"
+                        HorizontalAlignment="Left" 
+                        TabIndex="0"
+                        Width="45">
+                        <Button.Content>
+                            <fa:IconBlock Icon="VolumeHigh"/>
+                        </Button.Content>
+                    </Button>
 
-            <Grid 
-                Grid.Row="0" 
-                HorizontalAlignment="Stretch">
-                <TextBlock 
-                    Text="{Binding PlayerViewModel.RemainingTime}" 
-                    FontSize="34" 
-                    FontWeight="Bold"
-                    Width="40"
-                    HorizontalAlignment="Right"
-                    Margin="10,0"/>
+                    <Button 
+                        Command="{Binding SetSoundSettingCommand}" 
+                        Visibility="{Binding IsSoundOn, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+                        HorizontalAlignment="Left" 
+                        TabIndex="0"
+                        Width="45">
+                        <Button.Content>
+                            <fa:IconBlock Icon="VolumeMute"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <Grid 
+                    Grid.Row="0" 
+                    HorizontalAlignment="Stretch">
+                    <TextBlock 
+                        Text="{Binding PlayerViewModel.RemainingTime}" 
+                        FontSize="34" 
+                        FontWeight="Bold"
+                        Width="40"
+                        HorizontalAlignment="Right"
+                        Margin="10,0"/>
+                </Grid>
+
+                <WrapPanel 
+                    Grid.Row="1" 
+                    Orientation="Horizontal" 
+                    Width="500">
+                    <TextBlock 
+                        Text="{Binding PlayerViewModel.CurrentQuestion.Query}" 
+                        FontSize="34" 
+                        TextWrapping="Wrap" 
+                        TextAlignment="Center"/>
+                    
+                </WrapPanel>
+
+                <DockPanel 
+                    Grid.Row="2"
+                    Width="500">
+                    <TextBlock 
+                        Text="{Binding PlayerViewModel.CurrentQuestionInOrder}" 
+                        FontSize="14" 
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Center"
+                        Margin="10"/>
+                </DockPanel>
             </Grid>
 
-            <WrapPanel 
+            <Grid 
                 Grid.Row="1" 
-                Orientation="Horizontal" 
-                Width="500">
-                <TextBlock 
-                    Text="{Binding PlayerViewModel.CurrentQuestion.Query}" 
-                    FontSize="34" 
-                    TextWrapping="Wrap" 
-                    TextAlignment="Center"/>
+                Width="450" 
+                Height="200"
+                Margin="0,30,0,0"
+                DataContext="{Binding PlayerViewModel}">
                 
-            </WrapPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <DockPanel 
-                Grid.Row="2"
-                Width="500">
-                <TextBlock 
-                    Text="{Binding PlayerViewModel.CurrentQuestionInOrder}" 
-                    FontSize="14" 
-                    HorizontalAlignment="Stretch"
-                    TextAlignment="Center"
-                    Margin="10"/>
-            </DockPanel>
+                <Button 
+                    Content="{Binding CurrentAnswerOptions[0]}"
+                    CommandParameter="{Binding CurrentAnswerOptions[0]}"
+                    Style="{StaticResource AnswereButton}"
+                    Command="{Binding PickAnswerCommand}"
+                    Width="200"    
+                    Height="70"  
+                    Margin="10" 
+                    Grid.Row="0" 
+                    Grid.Column="0"
+                    TabIndex="1"/>
+
+                <Button 
+                    Content="{Binding CurrentAnswerOptions[1]}" 
+                    CommandParameter="{Binding CurrentAnswerOptions[1]}"
+                    Style="{StaticResource AnswereButton}"
+                    Command="{Binding PickAnswerCommand}"
+                    Width="200" 
+                    Height="70"  
+                    Margin="10" 
+                    Grid.Row="0" 
+                    Grid.Column="1"
+                    TabIndex="2"/>
+                <Button 
+                    Content="{Binding CurrentAnswerOptions[2]}" 
+                    CommandParameter="{Binding CurrentAnswerOptions[2]}"
+                    Style="{StaticResource AnswereButton}"
+                    Command="{Binding PickAnswerCommand}"
+                    Width="200" 
+                    Height="70"   
+                    Margin="10" 
+                    Grid.Row="1" 
+                    Grid.Column="0"
+                    TabIndex="3"/>
+                <Button 
+                    Content="{Binding CurrentAnswerOptions[3]}" 
+                    CommandParameter="{Binding CurrentAnswerOptions[3]}"
+                    Style="{StaticResource AnswereButton}"
+                    Command="{Binding PickAnswerCommand}"
+                    Width="200" 
+                    Height="70"  
+                    Margin="10" 
+                    Grid.Row="1" 
+                    Grid.Column="1"
+                    TabIndex="4"/>
+            </Grid>
+            
         </Grid>
-
         <Grid 
-            Grid.Row="1" 
-            Width="450" 
-            Height="200"
-            Margin="0,30,0,0"
-            DataContext="{Binding PlayerViewModel}">
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{Binding PlayerViewModel.IsGameOver, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Button 
-                Content="{Binding CurrentAnswerOptions[0]}" 
-                CommandParameter="{Binding CurrentAnswerOptions[0]}"
-                Style="{StaticResource AnswereButton}"
-                Command="{Binding PickAnswerCommand}"
-                Width="200"    
-                Height="70"  
-                Margin="10" 
-                Grid.Row="0" 
-                Grid.Column="0"
-                TabIndex="1"/>
-            <Button 
-                Content="{Binding CurrentAnswerOptions[1]}" 
-                CommandParameter="{Binding CurrentAnswerOptions[1]}"
-                Style="{StaticResource AnswereButton}"
-                Command="{Binding PickAnswerCommand}"
-                Width="200" 
-                Height="70"  
-                Margin="10" 
-                Grid.Row="0" 
-                Grid.Column="1"
-                TabIndex="2"/>
-            <Button 
-                Content="{Binding CurrentAnswerOptions[2]}" 
-                CommandParameter="{Binding CurrentAnswerOptions[2]}"
-                Style="{StaticResource AnswereButton}"
-                Command="{Binding PickAnswerCommand}"
-                Width="200" 
-                Height="70"   
-                Margin="10" 
-                Grid.Row="1" 
-                Grid.Column="0"
-                TabIndex="3"/>
-            <Button 
-                Content="{Binding CurrentAnswerOptions[3]}" 
-                CommandParameter="{Binding CurrentAnswerOptions[3]}"
-                Style="{StaticResource AnswereButton}"
-                Command="{Binding PickAnswerCommand}"
-                Width="200" 
-                Height="70"  
-                Margin="10" 
-                Grid.Row="1" 
-                Grid.Column="1"
-                TabIndex="4"/>
+            <TextBlock 
+                Grid.Row="0"
+                Text="Complete!" 
+                FontSize="24" 
+                FontWeight="Bold"
+                HorizontalAlignment="Center"
+                Margin="10,100,10,10"/>
+            <TextBlock 
+                Grid.Row="1"
+                Text="{Binding PlayerViewModel.ResultString}" 
+                FontSize="14" 
+                HorizontalAlignment="Center"
+                Margin="10"/>
+            <StackPanel 
+                Orientation="Horizontal"
+                Grid.Row="2">
+                <Button 
+                    Content="Restart" 
+                    Command="{Binding PlayerViewModel.RestartGameCommand}"
+                    Style="{StaticResource AnswereButton}"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Width="200"
+                    Height="70"
+                    Margin="10"
+                    TabIndex="0"/>
+                <Button 
+                    Content="Cancel" 
+                    Command="{Binding SetConfigurationModeCommand}"
+                    Style="{StaticResource AnswereButton}"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Width="200"
+                    Height="70"
+                    Margin="10"
+                    TabIndex="1"/>
+            </StackPanel>
         </Grid>
-
     </Grid>
 </UserControl>
