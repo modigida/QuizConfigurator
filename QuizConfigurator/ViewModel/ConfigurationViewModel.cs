@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace QuizConfigurator.ViewModel;
 public class ConfigurationViewModel : BaseViewModel
@@ -54,9 +55,16 @@ public class ConfigurationViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
-    
+
+    private ICommand _removeQuestionCommand;
+    public ICommand RemoveQuestionCommand 
+    {
+        get
+        {
+            return _removeQuestionCommand ??= new RelayCommand(RemoveQuestion, CanRemoveQuestion);
+        }
+    }
     public ICommand AddQuestionCommand { get; }
-    public ICommand RemoveQuestionCommand { get; }
     public ICommand EditPackOptionsCommand { get; }
     public ICommand ClosePackOptionsCommand { get; }
 
@@ -82,7 +90,6 @@ public class ConfigurationViewModel : BaseViewModel
     public ConfigurationViewModel(MainWindowViewModel mainWindowViewModel)
     {
         AddQuestionCommand = new RelayCommand(AddQuestion, CanAddQuestion);
-        RemoveQuestionCommand = new RelayCommand(RemoveQuestion, CanRemoveQuestion);
         EditPackOptionsCommand = new RelayCommand(EditPackOptions, CanEditPackOptions);
         ClosePackOptionsCommand = new RelayCommand(mainWindowViewModel.ClosePackOptions);
         _mainWindowViewModel = mainWindowViewModel;
@@ -93,6 +100,7 @@ public class ConfigurationViewModel : BaseViewModel
     {
         var question = new QuestionViewModel(new Question("New Question", string.Empty, string.Empty, string.Empty, string.Empty));
         _mainWindowViewModel.ActivePack?.Questions.Add(question);
+        
         ActiveQuestion = question;
         SelectedItems.Clear();
         SelectedItems.Add(question);
@@ -114,7 +122,7 @@ public class ConfigurationViewModel : BaseViewModel
     {
         OnPropertyChanged(nameof(SelectionMessage));
     }
-    private bool CanRemoveQuestion(object arg) => SelectedItems != null && !_mainWindowViewModel.IsPlayMode;
+    private bool CanRemoveQuestion(object arg) => SelectedItems.Count > 0 && !_mainWindowViewModel.IsPlayMode;
     private void RemoveQuestion(object obj)
     {
         if (SelectedItems != null)
