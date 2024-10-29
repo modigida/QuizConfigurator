@@ -150,9 +150,29 @@ public class PlayerViewModel : BaseViewModel
         }
     }
 
+    private Visibility _correctImageVisibility;
+    public Visibility CorrectImageVisibility
+    {
+        get => _correctImageVisibility;
+        set
+        {
+            _correctImageVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+
     public ICommand PickAnswerCommand { get; }
     public ICommand RestartGameCommand { get; }
     public ICommand SetSoundSettingCommand { get; }
+
+    public bool IsVisibleCorrectIconAnswerZero { get; private set; }
+    public bool IsVisibleIncorrectIconAnswerZero { get; private set; }
+    public bool IsVisibleCorrectIconAnswerOne { get; private set; }
+    public bool IsVisibleIncorrectIconAnswerOne { get; private set; }
+    public bool IsVisibleCorrectIconAnswerTwo { get; private set; }
+    public bool IsVisibleIncorrectIconAnswerTwo { get; private set; }
+    public bool IsVisibleCorrectIconAnswerThree { get; private set; }
+    public bool IsVisibleIncorrectIconAnswerThree { get; private set; }
 
     public PlayerViewModel(MainWindowViewModel mainWindowViewModel)
     {
@@ -300,16 +320,67 @@ public class PlayerViewModel : BaseViewModel
         if (selectedAnswer is string answer)
         {
             IsAnswerCorrect = answer == CurrentQuestion.CorrectAnswer;
+
+            int selectedIndex = CurrentAnswerOptions.IndexOf(answer);
+
+            switch (selectedIndex)
+            {
+                case 0:
+                    IsVisibleCorrectIconAnswerZero = IsAnswerCorrect;
+                    IsVisibleIncorrectIconAnswerZero = !IsAnswerCorrect;
+                    break;
+                case 1:
+                    IsVisibleCorrectIconAnswerOne = IsAnswerCorrect;
+                    IsVisibleIncorrectIconAnswerOne = !IsAnswerCorrect;
+                    break;
+                case 2:
+                    IsVisibleCorrectIconAnswerTwo = IsAnswerCorrect;
+                    IsVisibleIncorrectIconAnswerTwo = !IsAnswerCorrect;
+                    break;
+                case 3:
+                    IsVisibleCorrectIconAnswerThree = IsAnswerCorrect;
+                    IsVisibleIncorrectIconAnswerThree = !IsAnswerCorrect;
+                    break;
+            }
+
+            await ExecuteVoice(IsAnswerCorrect ? "Correct" : "Wrong answer");
+
             if (IsAnswerCorrect)
             {
-                await ExecuteVoice("Correct");
                 AmountOfCorrectAnswers++;
             }
-            else
-            {
-                await ExecuteVoice("Wrong answer");
-            }
+
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerZero));
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerOne));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerOne));
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerTwo));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
+            
+
             await Task.Delay(1000);
+
+            IsVisibleCorrectIconAnswerZero = false;
+            IsVisibleIncorrectIconAnswerZero = false;
+            IsVisibleCorrectIconAnswerOne = false;
+            IsVisibleIncorrectIconAnswerOne = false;
+            IsVisibleCorrectIconAnswerTwo = false;
+            IsVisibleIncorrectIconAnswerTwo = false;
+            IsVisibleCorrectIconAnswerThree = false;
+            IsVisibleIncorrectIconAnswerThree = false;
+
+
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerZero));
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerOne));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerOne));
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerTwo));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
+            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
+            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
+            
         }
     }
     private void RestartGame(object obj) => Start();

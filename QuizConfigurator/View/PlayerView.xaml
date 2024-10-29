@@ -179,7 +179,7 @@
                 Height="200"
                 Margin="0,30,0,0"
                 DataContext="{Binding PlayerViewModel}">
-                
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -190,53 +190,145 @@
                 </Grid.ColumnDefinitions>
 
                 <Button 
-                    Content="{Binding CurrentAnswerOptions[0]}"
+                    Command="{Binding PickAnswerCommand}"
                     CommandParameter="{Binding CurrentAnswerOptions[0]}"
                     Style="{StaticResource AnswereButton}"
-                    Command="{Binding PickAnswerCommand}"
                     Width="200"    
                     Height="70"  
                     Margin="10" 
                     Grid.Row="0" 
                     Grid.Column="0"
-                    TabIndex="1"/>
+                    TabIndex="1">
+                    <Grid>
+                        <Image 
+                            Source="pack://application:,,,/Resources/correct.png" 
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleCorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Image 
+                            Source="pack://application:,,,/Resources/incorrect.png" 
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleIncorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBlock 
+                            Text="{Binding CurrentAnswerOptions[0]}"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"/>
+                    </Grid>
+                </Button>
 
                 <Button 
-                    Content="{Binding CurrentAnswerOptions[1]}" 
+                    Command="{Binding PickAnswerCommand}"
                     CommandParameter="{Binding CurrentAnswerOptions[1]}"
                     Style="{StaticResource AnswereButton}"
-                    Command="{Binding PickAnswerCommand}"
-                    Width="200" 
+                    Width="200"    
                     Height="70"  
                     Margin="10" 
                     Grid.Row="0" 
                     Grid.Column="1"
-                    TabIndex="2"/>
+                    TabIndex="2">
+                    <Grid>
+                        <Image 
+                            Source="pack://application:,,,/Resources/correct.png"  
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleCorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Image 
+                            Source="pack://application:,,,/Resources/incorrect.png"  
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleIncorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBlock 
+                            Text="{Binding CurrentAnswerOptions[1]}"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"/>
+                    </Grid>
+                </Button>
+
                 <Button 
-                    Content="{Binding CurrentAnswerOptions[2]}" 
+                    Command="{Binding PickAnswerCommand}"
                     CommandParameter="{Binding CurrentAnswerOptions[2]}"
                     Style="{StaticResource AnswereButton}"
-                    Command="{Binding PickAnswerCommand}"
-                    Width="200" 
-                    Height="70"   
+                    Width="200"    
+                    Height="70"  
                     Margin="10" 
                     Grid.Row="1" 
                     Grid.Column="0"
-                    TabIndex="3"/>
+                    TabIndex="2">
+                    <Grid>
+                        <Image 
+                            Source="pack://application:,,,/Resources/correct.png" 
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleCorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Image 
+                            Source="pack://application:,,,/Resources/incorrect.png" 
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleIncorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBlock 
+                            Text="{Binding CurrentAnswerOptions[2]}"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"/>
+                    </Grid>
+                </Button>
+                
                 <Button 
-                    Content="{Binding CurrentAnswerOptions[3]}" 
+                    Command="{Binding PickAnswerCommand}"
                     CommandParameter="{Binding CurrentAnswerOptions[3]}"
                     Style="{StaticResource AnswereButton}"
-                    Command="{Binding PickAnswerCommand}"
-                    Width="200" 
+                    Width="200"    
                     Height="70"  
                     Margin="10" 
                     Grid.Row="1" 
                     Grid.Column="1"
-                    TabIndex="4"/>
+                    TabIndex="2">
+
+                    <Grid>
+                        <Image 
+                            Source="pack://application:,,,/Resources/correct.png" 
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleCorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Image 
+                            Source="pack://application:,,,/Resources/incorrect.png" 
+                            Width="50" 
+                            Height="50" 
+                            Margin="-110,-40,0,0" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Top"
+                            Visibility="{Binding IsVisibleIncorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBlock 
+                            Text="{Binding CurrentAnswerOptions[3]}"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"/>
+                    </Grid>
+                </Button>
             </Grid>
-            
+
         </Grid>
+        
         <Grid 
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
