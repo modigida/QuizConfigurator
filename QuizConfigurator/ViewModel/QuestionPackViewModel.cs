@@ -1,18 +1,13 @@
 ﻿using QuizConfigurator.Model;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 namespace QuizConfigurator.ViewModel;
 public class QuestionPackViewModel : BaseViewModel
 {
-    private QuestionPack _model;
-    public QuestionPack Model
-    {
-        get => _model;
-        set
-        {
-            _model = value;
-        }
-    }
+    private readonly QuestionPack _model;
+    public QuestionPack Model => _model;
+
 
     public string Name
     {
@@ -44,7 +39,7 @@ public class QuestionPackViewModel : BaseViewModel
     public ObservableCollection<QuestionViewModel> Questions { get; }
     public QuestionPackViewModel()
     {
-        
+
     }
     public QuestionPackViewModel(QuestionPack model)
     {
@@ -54,5 +49,4 @@ public class QuestionPackViewModel : BaseViewModel
             _model.Questions.Select(q => new QuestionViewModel(q))
         );
     }
-    
 }

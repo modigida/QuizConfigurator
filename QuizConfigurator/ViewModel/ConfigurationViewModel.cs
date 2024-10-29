@@ -1,17 +1,18 @@
 ﻿using QuizConfigurator.Commands;
 using QuizConfigurator.Model;
+using QuizConfigurator.Service;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace QuizConfigurator.ViewModel;
 public class ConfigurationViewModel : BaseViewModel
 {
     private readonly MainWindowViewModel _mainWindowViewModel;
+
     private bool _isComponentVisible;
     public bool IsComponentVisible
     {
@@ -93,7 +94,7 @@ public class ConfigurationViewModel : BaseViewModel
         AddQuestionCommand = new RelayCommand(AddQuestion, CanAddQuestion);
         EditPackOptionsCommand = new RelayCommand(EditPackOptions, CanEditPackOptions);
         ClosePackOptionsCommand = new RelayCommand(mainWindowViewModel.ClosePackOptions);
-        
+
         _mainWindowViewModel = mainWindowViewModel;
 
         SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
@@ -104,21 +105,23 @@ public class ConfigurationViewModel : BaseViewModel
     {
         if (e.PropertyName == nameof(_mainWindowViewModel.ActivePack))
         {
-            UpdateIsComponentVisible(); // Uppdatera IsComponentVisible när ActivePack ändras
+            UpdateIsComponentVisible(); 
         }
     }
     private bool CanAddQuestion(object arg) => !_mainWindowViewModel.IsPlayMode;
-    private void AddQuestion(object obj)
+    private async void AddQuestion(object obj)
     {
         var question = new QuestionViewModel(new Question("New Question", string.Empty, string.Empty, string.Empty, string.Empty));
         _mainWindowViewModel.ActivePack?.Questions.Add(question);
-
+        
         _mainWindowViewModel.Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
-
+        
         ActiveQuestion = question;
-
+        
         SelectedItems.Clear();
         SelectedItems.Add(question);
+
+        await JsonHandler.SavePacksToJson(_mainWindowViewModel);
     }
     private void OnSelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
@@ -132,7 +135,6 @@ public class ConfigurationViewModel : BaseViewModel
     private void UpdateIsComponentVisible()
     {
         IsComponentVisible = ActiveQuestion != null && SelectedItems.Count == 1;
-        //IsComponentVisible = ActiveQuestion != null && SelectedItems.Count == 1;
     }
     private void UpdateSelectionMessage()
     {

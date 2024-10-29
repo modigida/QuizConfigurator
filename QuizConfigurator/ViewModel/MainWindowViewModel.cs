@@ -3,15 +3,14 @@ using QuizConfigurator.Model;
 using QuizConfigurator.Service;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Text.Json;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 
 namespace QuizConfigurator.ViewModel;
 public class MainWindowViewModel : BaseViewModel
 {
-    JsonHandler jsonHandler = new JsonHandler();
+    private QuestionPackViewModel? _newPack;
 
     private bool _isPlayMode;
     public bool IsPlayMode
@@ -65,6 +64,7 @@ public class MainWindowViewModel : BaseViewModel
             OnPropertyChanged(nameof(UseActivePack));
         }
     }
+    
     public Window ParentWindow => Application.Current.MainWindow;
     public QuestionPackViewModel? CurrentPack => _useActivePack ? ActivePack : NewPack;
     public PlayerViewModel PlayerViewModel { get; }
@@ -72,7 +72,6 @@ public class MainWindowViewModel : BaseViewModel
     public QuestionPackViewModel QuestionPackViewModel { get; }
     public QuestionViewModel QuestionViewModel { get; }
 
-    private QuestionPackViewModel? _newPack;
     private ObservableCollection<QuestionPackViewModel> _packs;
     public ObservableCollection<QuestionPackViewModel> Packs
     {
@@ -107,18 +106,12 @@ public class MainWindowViewModel : BaseViewModel
     {
         Packs = new ObservableCollection<QuestionPackViewModel>();
 
-        jsonHandler.LoadPacksFromJson(this);
+        LoadPacksAsync();
 
         PlayerViewModel = new PlayerViewModel(this);
         ConfigurationViewModel = new ConfigurationViewModel(this);
         QuestionPackViewModel = new QuestionPackViewModel();
         QuestionViewModel = new QuestionViewModel();
-
-        //ActivePack = new QuestionPackViewModel(new QuestionPack("Default Pack"));
-        //
-        //Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
-        //
-        //SetDefaultActivePack();
 
         _isPlayMode = false;
 
@@ -130,7 +123,16 @@ public class MainWindowViewModel : BaseViewModel
         CreateNewPackCommand = new RelayCommand(CreateNewPack);
         ImportQuestionsCommand = new RelayCommand(ImportQuestions, CanImportQuestions);
 
-        //LoadPacksFromJson();
+        Packs.CollectionChanged += Packs_CollectionChanged;
+    }
+
+    private async void LoadPacksAsync()
+    {
+        await JsonHandler.LoadPacksFromJson(this);
+    }
+    private async void Packs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        await JsonHandler.SavePacksToJson(this);
     }
     public void SetDefaultActivePack()
     {
@@ -254,7 +256,7 @@ public class MainWindowViewModel : BaseViewModel
             MessageBoxButton.YesNo);
         if (result == MessageBoxResult.Yes)
         {
-            await jsonHandler.SavePacksToJson(this);
+            await JsonHandler.SavePacksToJson(this);
             Application.Current.Shutdown();
         }
     }

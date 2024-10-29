@@ -5,8 +5,6 @@ using System.Text.Json.Serialization;
 namespace QuizConfigurator.Model;
 public class Question
 {
-    private List<string> list;
-
     public string Query { get; set; }
     public string CorrectAnswer { get; set; }
     public string[] IncorrectAnswers { get; set; }
