@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Input;
 
 namespace QuizConfigurator.Helpers;
 public static class ListViewHelper
@@ -16,8 +17,10 @@ public static class ListViewHelper
             if (e.OldValue is IList oldSelectedItems)
             {
                 listView.SelectionChanged -= ListView_SelectionChanged;
+                listView.MouseDoubleClick -= ListView_MouseDoubleClick;
             }
             listView.SelectionChanged += ListView_SelectionChanged;
+            listView.MouseDoubleClick += ListView_MouseDoubleClick;
         }
     }
     private static void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -25,16 +28,39 @@ public static class ListViewHelper
         if (sender is ListView listView)
         {
             IList selectedItems = GetBindableSelectedItems(listView);
-            if (selectedItems == null) return;
-
-            if (selectedItems.Count > 0)
+            if (selectedItems != null)
             {
-                selectedItems.Clear();
+
+                if (selectedItems.Count > 0)
+                {
+                    selectedItems.Clear();
+                }
+
+                foreach (var item in listView.SelectedItems)
+                {
+                    selectedItems.Add(item);
+                }
             }
+        }
+    }
+    private static void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is ListView listView)
+        {
+            var clickedItem = (e.OriginalSource as FrameworkElement)?.DataContext;
 
-            foreach (var item in listView.SelectedItems)
+            if (clickedItem != null && listView.Items.Contains(clickedItem))
             {
-                selectedItems.Add(item);
+                listView.SelectedItems.Clear();
+
+                listView.SelectedItems.Add(clickedItem);
+
+                IList selectedItems = GetBindableSelectedItems(listView);
+                if (selectedItems != null)
+                {
+                    selectedItems.Clear();
+                    selectedItems.Add(clickedItem);
+                }
             }
         }
     }
