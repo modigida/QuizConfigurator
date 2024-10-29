@@ -4,7 +4,16 @@ using System.Collections.ObjectModel;
 namespace QuizConfigurator.ViewModel;
 public class QuestionPackViewModel : BaseViewModel
 {
-    private readonly QuestionPack _model;
+    private QuestionPack _model;
+    public QuestionPack Model
+    {
+        get => _model;
+        set
+        {
+            _model = value;
+        }
+    }
+
     public string Name
     {
         get => _model.Name;
@@ -45,4 +54,5 @@ public class QuestionPackViewModel : BaseViewModel
             _model.Questions.Select(q => new QuestionViewModel(q))
         );
     }
+    
 }

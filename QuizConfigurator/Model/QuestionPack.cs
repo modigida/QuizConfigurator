@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.Text.Json.Serialization;
 
 namespace QuizConfigurator.Model;
 public class QuestionPack
@@ -17,5 +14,14 @@ public class QuestionPack
         Difficulty = difficulty;
         TimeLimitInSeconds = timeLimitInSeconds;
         Questions = new List<Question>();
+    }
+
+    [JsonConstructor]
+    public QuestionPack(string name, Difficulty difficulty, int timeLimitInSeconds, List<Question> questions)
+    {
+        Name = name;
+        Difficulty = difficulty;
+        TimeLimitInSeconds = timeLimitInSeconds;
+        Questions = questions ?? new List<Question>();
     }
 }

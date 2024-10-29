@@ -1,14 +1,17 @@
 ﻿using QuizConfigurator.Commands;
 using QuizConfigurator.Model;
+using QuizConfigurator.Service;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
-using System.Speech.Synthesis;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
 
 namespace QuizConfigurator.ViewModel;
 public class MainWindowViewModel : BaseViewModel
 {
+    JsonHandler jsonHandler = new JsonHandler();
 
     private bool _isPlayMode;
     public bool IsPlayMode
@@ -58,8 +61,8 @@ public class MainWindowViewModel : BaseViewModel
         set
         {
             _useActivePack = value;
-            OnPropertyChanged(nameof(CurrentPack)); // Notify that CurrentPack has changed
-            OnPropertyChanged(nameof(UseActivePack)); // Notify for the UI to reflect changes
+            OnPropertyChanged(nameof(CurrentPack));
+            OnPropertyChanged(nameof(UseActivePack));
         }
     }
     public Window ParentWindow => Application.Current.MainWindow;
@@ -79,8 +82,6 @@ public class MainWindowViewModel : BaseViewModel
             _packs = value;
             OnPropertyChanged();
             CommandManager.InvalidateRequerySuggested();
-            // Serialize list to Json file here, will write over. Can be made when exiting program
-            // but if program crashed data will get lost
         }
     }
 
@@ -91,7 +92,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand SetActivePackCommand { get; }
     public ICommand CreateNewPackCommand { get; }
     public ICommand CurrentPackCommand { get; set; }
-    //public ICommand RemoveQuestionPackCommand { get; }
+
     private ICommand _removeQuestionPackCommand;
     public ICommand RemoveQuestionPackCommand
     {
@@ -104,18 +105,20 @@ public class MainWindowViewModel : BaseViewModel
 
     public MainWindowViewModel()
     {
-        // Read packs from Json file here 
-
         Packs = new ObservableCollection<QuestionPackViewModel>();
-        Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
 
-        ActivePack = new QuestionPackViewModel(new QuestionPack("Default Pack"));
-        Packs.Add(ActivePack);
+        jsonHandler.LoadPacksFromJson(this);
 
         PlayerViewModel = new PlayerViewModel(this);
         ConfigurationViewModel = new ConfigurationViewModel(this);
         QuestionPackViewModel = new QuestionPackViewModel();
         QuestionViewModel = new QuestionViewModel();
+
+        //ActivePack = new QuestionPackViewModel(new QuestionPack("Default Pack"));
+        //
+        //Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
+        //
+        //SetDefaultActivePack();
 
         _isPlayMode = false;
 
@@ -125,9 +128,24 @@ public class MainWindowViewModel : BaseViewModel
         SetConfigurationModeCommand = new RelayCommand(SetConfigurationMode, CanSetConfigurationMode);
         SetActivePackCommand = new RelayCommand(SetActivePack);
         CreateNewPackCommand = new RelayCommand(CreateNewPack);
-        //RemoveQuestionPackCommand = new RelayCommand(RemoveQuestionPack, CanRemoveQuestionPack);
         ImportQuestionsCommand = new RelayCommand(ImportQuestions, CanImportQuestions);
+
+        //LoadPacksFromJson();
     }
+    public void SetDefaultActivePack()
+    {
+        if (Packs.Count == 0)
+        {
+            ActivePack = new QuestionPackViewModel(new QuestionPack("Default Pack"));
+            Packs.Add(ActivePack);
+        }
+        else
+        {
+            ActivePack = Packs.FirstOrDefault();
+        }
+        Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
+    }
+    
     private void ToggleFullScreen(object obj)
     {
         var window = Application.Current.MainWindow;
@@ -144,15 +162,7 @@ public class MainWindowViewModel : BaseViewModel
             window.Topmost = false;
         }
     }
-    private void ExitProgram(object obj)
-    {
-        var result = MessageBox.Show("Are you sure you want to exit?", "Exit Program",
-            MessageBoxButton.YesNo);
-        if (result == MessageBoxResult.Yes)
-        {
-            Application.Current.Shutdown();
-        }
-    }
+    
     private bool CanSetPlayMode(object arg) => !_isPlayMode && ActivePack.Questions.Count > 0;
     private void SetPlayMode(object obj)
     {
@@ -163,11 +173,15 @@ public class MainWindowViewModel : BaseViewModel
     private void SetConfigurationMode(object obj)
     {
         IsPlayMode = false;
-        //PlayerViewModel.Stop();
     }
     private void SetActivePack(object obj)
     {
         ActivePack = obj as QuestionPackViewModel;
+        ConfigurationViewModel.ActiveQuestion = null;
+        ConfigurationViewModel.SelectedItems.Clear();
+        OnPropertyChanged(nameof(ConfigurationViewModel.SelectedItems));
+        OnPropertyChanged(nameof(ConfigurationViewModel.ActiveQuestion));
+        OnPropertyChanged(nameof(ActivePack));
         CommandManager.InvalidateRequerySuggested();
     }
     private void CreateNewPack(object obj)
@@ -202,6 +216,8 @@ public class MainWindowViewModel : BaseViewModel
             ActivePack = newPackViewModel;
 
             CommandManager.InvalidateRequerySuggested();
+
+            OnPropertyChanged(nameof(ActivePack));
         }
         ClosePackOptions(obj);
     }
@@ -210,8 +226,7 @@ public class MainWindowViewModel : BaseViewModel
         var window = (Window)obj;
         window.Close();
     }
-    private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1;
-    //private void RemoveQuestionPack(object obj) => Packs.Remove(ActivePack);
+    private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1 && !IsPlayMode;
     private void RemoveQuestionPack(object obj)
     {
         if (ActivePack != null)
@@ -231,5 +246,16 @@ public class MainWindowViewModel : BaseViewModel
     private void ImportQuestions(object obj)
     {
         throw new NotImplementedException();
+    }
+
+    private async void ExitProgram(object obj)
+    {
+        var result = MessageBox.Show("Are you sure you want to exit?", "Exit Program",
+            MessageBoxButton.YesNo);
+        if (result == MessageBoxResult.Yes)
+        {
+            await jsonHandler.SavePacksToJson(this);
+            Application.Current.Shutdown();
+        }
     }
 }

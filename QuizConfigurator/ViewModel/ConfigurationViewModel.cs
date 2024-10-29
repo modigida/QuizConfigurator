@@ -3,6 +3,7 @@ using QuizConfigurator.Model;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
@@ -92,16 +93,30 @@ public class ConfigurationViewModel : BaseViewModel
         AddQuestionCommand = new RelayCommand(AddQuestion, CanAddQuestion);
         EditPackOptionsCommand = new RelayCommand(EditPackOptions, CanEditPackOptions);
         ClosePackOptionsCommand = new RelayCommand(mainWindowViewModel.ClosePackOptions);
+        
         _mainWindowViewModel = mainWindowViewModel;
+
         SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
+
+        _mainWindowViewModel.PropertyChanged += MainWindowViewModel_PropertyChanged;
+    }
+    private void MainWindowViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(_mainWindowViewModel.ActivePack))
+        {
+            UpdateIsComponentVisible(); // Uppdatera IsComponentVisible när ActivePack ändras
+        }
     }
     private bool CanAddQuestion(object arg) => !_mainWindowViewModel.IsPlayMode;
     private void AddQuestion(object obj)
     {
         var question = new QuestionViewModel(new Question("New Question", string.Empty, string.Empty, string.Empty, string.Empty));
         _mainWindowViewModel.ActivePack?.Questions.Add(question);
-        
+
+        _mainWindowViewModel.Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
+
         ActiveQuestion = question;
+
         SelectedItems.Clear();
         SelectedItems.Add(question);
     }
@@ -117,6 +132,7 @@ public class ConfigurationViewModel : BaseViewModel
     private void UpdateIsComponentVisible()
     {
         IsComponentVisible = ActiveQuestion != null && SelectedItems.Count == 1;
+        //IsComponentVisible = ActiveQuestion != null && SelectedItems.Count == 1;
     }
     private void UpdateSelectionMessage()
     {
