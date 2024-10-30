@@ -156,7 +156,16 @@ public class MainWindowViewModel : BaseViewModel
             window.Topmost = false;
         }
     }
-    
+    public PackDialog OpenPackDialog()
+    {
+        var packDialog = new PackDialog
+        {
+            Owner = ParentWindow,
+            DataContext = this
+        };
+        return packDialog;
+    }
+
     private bool CanSetPlayMode(object arg) => !_isPlayMode && ActivePack.Questions.Count > 0;
     private void SetPlayMode(object obj)
     {
@@ -169,22 +178,6 @@ public class MainWindowViewModel : BaseViewModel
         IsPlayMode = false;
     }
     private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1 && !IsPlayMode;
-
-    public void OpenPackOptions()
-    {
-        var packDialog = new PackDialog
-        {
-            Owner = ParentWindow,
-            DataContext = this
-        };
-
-        if (packDialog.ShowDialog() == true)
-        {
-            Packs.Add(NewPack);
-            ActivePack = NewPack;
-            CommandManager.InvalidateRequerySuggested();
-        }
-    }
     public void ClosePackOptions(object obj)
     {
         var window = (Window)obj;

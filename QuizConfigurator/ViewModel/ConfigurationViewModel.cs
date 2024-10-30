@@ -1,7 +1,6 @@
 ﻿using QuizConfigurator.Commands;
 using QuizConfigurator.Model;
 using QuizConfigurator.Service;
-using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -174,11 +173,8 @@ public class ConfigurationViewModel : BaseViewModel
         _mainWindowViewModel.ButtonToggleContent = "Edit";
         _mainWindowViewModel.CurrentPackCommand = new RelayCommand(SaveEditPackOptions);
         _mainWindowViewModel.UseActivePack = true;
-        var packDialog = new PackDialog
-        {
-            Owner = _mainWindowViewModel.ParentWindow,
-            DataContext = _mainWindowViewModel
-        };
+
+        var packDialog = _mainWindowViewModel.OpenPackDialog();
 
         if (packDialog.ShowDialog() == true)
         {

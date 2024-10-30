@@ -45,8 +45,14 @@ public class MainWindowViewModelHandlePacks : BaseViewModel
 
         _mainWindowViewModel.NewPack = new QuestionPackViewModel(new QuestionPack("<PackName>"));
 
-        _mainWindowViewModel.OpenPackOptions();
-        
+        var packDialog = _mainWindowViewModel.OpenPackDialog();
+
+        if (packDialog.ShowDialog() == true)
+        {
+            _mainWindowViewModel.Packs.Add(_mainWindowViewModel.NewPack);
+            _mainWindowViewModel.ActivePack = _mainWindowViewModel.NewPack;
+            CommandManager.InvalidateRequerySuggested();
+        }
     }
     private void AddNewPack(object obj)
     {
@@ -64,7 +70,6 @@ public class MainWindowViewModelHandlePacks : BaseViewModel
         }
         _mainWindowViewModel.ClosePackOptions(obj);
     }
-
     public void RemoveQuestionPack(object obj)
     {
         if (_mainWindowViewModel.ActivePack != null)
