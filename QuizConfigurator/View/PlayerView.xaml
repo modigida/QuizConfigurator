@@ -207,7 +207,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleCorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <Image 
                             Source="pack://application:,,,/Resources/incorrect.png" 
                             Width="50" 
@@ -215,7 +215,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleIncorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBlock 
                             Text="{Binding CurrentAnswerOptions[0]}"
                             VerticalAlignment="Center" 
@@ -241,7 +241,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleCorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <Image 
                             Source="pack://application:,,,/Resources/incorrect.png"  
                             Width="50" 
@@ -249,7 +249,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleIncorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBlock 
                             Text="{Binding CurrentAnswerOptions[1]}"
                             VerticalAlignment="Center" 
@@ -275,7 +275,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleCorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <Image 
                             Source="pack://application:,,,/Resources/incorrect.png" 
                             Width="50" 
@@ -283,7 +283,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleIncorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBlock 
                             Text="{Binding CurrentAnswerOptions[2]}"
                             VerticalAlignment="Center" 
@@ -310,7 +310,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleCorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <Image 
                             Source="pack://application:,,,/Resources/incorrect.png" 
                             Width="50" 
@@ -318,7 +318,7 @@
                             Margin="-110,-40,0,0" 
                             HorizontalAlignment="Left" 
                             VerticalAlignment="Top"
-                            Visibility="{Binding IsVisibleIncorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBlock 
                             Text="{Binding CurrentAnswerOptions[3]}"
                             VerticalAlignment="Center" 

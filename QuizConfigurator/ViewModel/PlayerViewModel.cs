@@ -8,6 +8,8 @@ namespace QuizConfigurator.ViewModel;
 public class PlayerViewModel : BaseViewModel
 {
     private SpeechSynthesizer? _speechSynthesizer;
+
+    public PlayerViewModelCheckAnswer PlayerViewModelCheckAnswer { get; }
     public readonly MainWindowViewModel MainWindowViewModel;
 
     private DispatcherTimer _timer;
@@ -164,21 +166,14 @@ public class PlayerViewModel : BaseViewModel
     public ICommand PickAnswerCommand { get; }
     public ICommand RestartGameCommand { get; }
     public ICommand SetSoundSettingCommand { get; }
-
-    public bool IsVisibleCorrectIconAnswerZero { get; private set; }
-    public bool IsVisibleIncorrectIconAnswerZero { get; private set; }
-    public bool IsVisibleCorrectIconAnswerOne { get; private set; }
-    public bool IsVisibleIncorrectIconAnswerOne { get; private set; }
-    public bool IsVisibleCorrectIconAnswerTwo { get; private set; }
-    public bool IsVisibleIncorrectIconAnswerTwo { get; private set; }
-    public bool IsVisibleCorrectIconAnswerThree { get; private set; }
-    public bool IsVisibleIncorrectIconAnswerThree { get; private set; }
-
-    public PlayerViewModel(MainWindowViewModel mainWindowViewModel)
+    public PlayerViewModel(MainWindowViewModel mainWindowViewModel, PlayerViewModelCheckAnswer playerViewModelCheckAnswer)
     {
         CreateVoiceFeature();
 
+        PlayerViewModelCheckAnswer = playerViewModelCheckAnswer;
         MainWindowViewModel = mainWindowViewModel;
+
+        PlayerViewModelCheckAnswer.HideAnswerIcons();
 
         _timer = new DispatcherTimer();
         _timer.Interval = TimeSpan.FromSeconds(1);
@@ -311,102 +306,9 @@ public class PlayerViewModel : BaseViewModel
         if (_timer.IsEnabled)
         {
             _timer.Stop();
-            await CheckAnswer(selectedAnswer);
+            await PlayerViewModelCheckAnswer.CheckAnswer(selectedAnswer, this);
             LoadNextQuestion();
         }
     }
-    private async Task CheckAnswer(object selectedAnswer)
-    {
-        if (selectedAnswer is string answer)
-        {
-            IsAnswerCorrect = answer == CurrentQuestion.CorrectAnswer;
-            int selectedIndex = CurrentAnswerOptions.IndexOf(answer);
-            int correctIndex = CurrentAnswerOptions.IndexOf(CurrentQuestion.CorrectAnswer);
-
-            HideAnswerIcons();
-
-            DisplayCorrectAnswerIcon(correctIndex);
-            DisplaySelectedIncorrectAnswerIcon(selectedIndex);
-
-            await ExecuteVoice(IsAnswerCorrect ? "Correct" : "Wrong answer");
-
-            if (IsAnswerCorrect)
-            {
-                AmountOfCorrectAnswers++;
-            }
-
-            UpdateIconVisibility();
-
-            await Task.Delay(1000);
-
-            HideAnswerIcons();
-            
-            UpdateIconVisibility();
-        }
-    }
-
-    private void UpdateIconVisibility()
-    {
-        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
-        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerZero));
-        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerOne));
-        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerOne));
-        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerTwo));
-        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
-        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
-        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
-    }
-
-    private void DisplayCorrectAnswerIcon(int correctIndex)
-    {
-        switch (correctIndex)
-        {
-            case 0:
-                IsVisibleCorrectIconAnswerZero = true;
-                break;
-            case 1:
-                IsVisibleCorrectIconAnswerOne = true;
-                break;
-            case 2:
-                IsVisibleCorrectIconAnswerTwo = true;
-                break;
-            case 3:
-                IsVisibleCorrectIconAnswerThree = true;
-                break;
-        }
-    }
-    private void DisplaySelectedIncorrectAnswerIcon(int selectedIndex)
-    {
-        if (!IsAnswerCorrect)
-        {
-            switch (selectedIndex)
-            {
-                case 0:
-                    IsVisibleIncorrectIconAnswerZero = true;
-                    break;
-                case 1:
-                    IsVisibleIncorrectIconAnswerOne = true;
-                    break;
-                case 2:
-                    IsVisibleIncorrectIconAnswerTwo = true;
-                    break;
-                case 3:
-                    IsVisibleIncorrectIconAnswerThree = true;
-                    break;
-            }
-        }
-    }
-    private void HideAnswerIcons()
-    {
-        IsVisibleCorrectIconAnswerZero = false;
-        IsVisibleIncorrectIconAnswerZero = false;
-        IsVisibleCorrectIconAnswerOne = false;
-        IsVisibleIncorrectIconAnswerOne = false;
-        IsVisibleCorrectIconAnswerTwo = false;
-        IsVisibleIncorrectIconAnswerTwo = false;
-        IsVisibleCorrectIconAnswerThree = false;
-        IsVisibleIncorrectIconAnswerThree = false;
-    }
-
     private void RestartGame(object obj) => Start();
 }

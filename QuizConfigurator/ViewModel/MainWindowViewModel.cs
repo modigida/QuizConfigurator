@@ -68,6 +68,7 @@ public class MainWindowViewModel : BaseViewModel
     public Window ParentWindow => Application.Current.MainWindow;
     public QuestionPackViewModel? CurrentPack => _useActivePack ? ActivePack : NewPack;
     public PlayerViewModel PlayerViewModel { get; }
+    public PlayerViewModelCheckAnswer PlayerViewModelCheckAnswer { get; }
     public ConfigurationViewModel ConfigurationViewModel { get; }
     public QuestionPackViewModel QuestionPackViewModel { get; }
     public QuestionViewModel QuestionViewModel { get; }
@@ -108,7 +109,8 @@ public class MainWindowViewModel : BaseViewModel
 
         LoadPacksAsync();
 
-        PlayerViewModel = new PlayerViewModel(this);
+        PlayerViewModelCheckAnswer = new PlayerViewModelCheckAnswer();
+        PlayerViewModel = new PlayerViewModel(this, PlayerViewModelCheckAnswer);
         ConfigurationViewModel = new ConfigurationViewModel(this);
         QuestionPackViewModel = new QuestionPackViewModel();
         QuestionViewModel = new QuestionViewModel();
