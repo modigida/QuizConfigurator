@@ -320,27 +320,51 @@ public class PlayerViewModel : BaseViewModel
         if (selectedAnswer is string answer)
         {
             IsAnswerCorrect = answer == CurrentQuestion.CorrectAnswer;
-
             int selectedIndex = CurrentAnswerOptions.IndexOf(answer);
+            int correctIndex = CurrentAnswerOptions.IndexOf(CurrentQuestion.CorrectAnswer);
 
-            switch (selectedIndex)
+            IsVisibleCorrectIconAnswerZero = false;
+            IsVisibleIncorrectIconAnswerZero = false;
+            IsVisibleCorrectIconAnswerOne = false;
+            IsVisibleIncorrectIconAnswerOne = false;
+            IsVisibleCorrectIconAnswerTwo = false;
+            IsVisibleIncorrectIconAnswerTwo = false;
+            IsVisibleCorrectIconAnswerThree = false;
+            IsVisibleIncorrectIconAnswerThree = false;
+
+            switch (correctIndex)
             {
                 case 0:
-                    IsVisibleCorrectIconAnswerZero = IsAnswerCorrect;
-                    IsVisibleIncorrectIconAnswerZero = !IsAnswerCorrect;
+                    IsVisibleCorrectIconAnswerZero = true;
                     break;
                 case 1:
-                    IsVisibleCorrectIconAnswerOne = IsAnswerCorrect;
-                    IsVisibleIncorrectIconAnswerOne = !IsAnswerCorrect;
+                    IsVisibleCorrectIconAnswerOne = true;
                     break;
                 case 2:
-                    IsVisibleCorrectIconAnswerTwo = IsAnswerCorrect;
-                    IsVisibleIncorrectIconAnswerTwo = !IsAnswerCorrect;
+                    IsVisibleCorrectIconAnswerTwo = true;
                     break;
                 case 3:
-                    IsVisibleCorrectIconAnswerThree = IsAnswerCorrect;
-                    IsVisibleIncorrectIconAnswerThree = !IsAnswerCorrect;
+                    IsVisibleCorrectIconAnswerThree = true;
                     break;
+            }
+
+            if (!IsAnswerCorrect)
+            {
+                switch (selectedIndex)
+                {
+                    case 0:
+                        IsVisibleIncorrectIconAnswerZero = true;
+                        break;
+                    case 1:
+                        IsVisibleIncorrectIconAnswerOne = true;
+                        break;
+                    case 2:
+                        IsVisibleIncorrectIconAnswerTwo = true;
+                        break;
+                    case 3:
+                        IsVisibleIncorrectIconAnswerThree = true;
+                        break;
+                }
             }
 
             await ExecuteVoice(IsAnswerCorrect ? "Correct" : "Wrong answer");
@@ -358,7 +382,6 @@ public class PlayerViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
             OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
             OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
-            
 
             await Task.Delay(1000);
 
@@ -371,7 +394,6 @@ public class PlayerViewModel : BaseViewModel
             IsVisibleCorrectIconAnswerThree = false;
             IsVisibleIncorrectIconAnswerThree = false;
 
-
             OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
             OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerZero));
             OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerOne));
@@ -380,18 +402,7 @@ public class PlayerViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
             OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
             OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
-            
         }
     }
     private void RestartGame(object obj) => Start();
-
-    // Method maybe not needed
-    public void Stop()
-    {
-        _timer.Stop();
-        IsPlaying = false;
-
-        // If not restarting program
-        MainWindowViewModel.IsPlayMode = false;
-    }
 }
