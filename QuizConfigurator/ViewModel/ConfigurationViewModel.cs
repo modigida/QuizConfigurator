@@ -58,8 +58,8 @@ public class ConfigurationViewModel : BaseViewModel
         }
     }
 
-    private ICommand _removeQuestionCommand;
-    public ICommand RemoveQuestionCommand 
+    private ICommand? _removeQuestionCommand;
+    public ICommand? RemoveQuestionCommand 
     {
         get
         {

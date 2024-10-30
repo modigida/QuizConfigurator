@@ -64,7 +64,7 @@ public class MainWindowViewModel : BaseViewModel
             OnPropertyChanged(nameof(UseActivePack));
         }
     }
-    
+
     public Window ParentWindow => Application.Current.MainWindow;
     public QuestionPackViewModel? CurrentPack => _useActivePack ? ActivePack : NewPack;
     public PlayerViewModel PlayerViewModel { get; }
@@ -72,6 +72,7 @@ public class MainWindowViewModel : BaseViewModel
     public ConfigurationViewModel ConfigurationViewModel { get; }
     public QuestionPackViewModel QuestionPackViewModel { get; }
     public QuestionViewModel QuestionViewModel { get; }
+    public PlayerViewModelTimer PlayerViewModelTickingSound { get; }
     public MainWindowViewModelHandlePacks MainWindowViewModelHandlePacks { get; }
 
     private ObservableCollection<QuestionPackViewModel> _packs;
@@ -113,10 +114,13 @@ public class MainWindowViewModel : BaseViewModel
 
         MainWindowViewModelHandlePacks = new MainWindowViewModelHandlePacks(this);
         PlayerViewModelCheckAnswer = new PlayerViewModelCheckAnswer();
-        PlayerViewModel = new PlayerViewModel(this, PlayerViewModelCheckAnswer);
+        PlayerViewModelTickingSound = new PlayerViewModelTimer(this);
+        PlayerViewModel = new PlayerViewModel(this, PlayerViewModelCheckAnswer, PlayerViewModelTickingSound);
+
         ConfigurationViewModel = new ConfigurationViewModel(this);
         QuestionPackViewModel = new QuestionPackViewModel();
         QuestionViewModel = new QuestionViewModel();
+        
 
         _isPlayMode = false;
 
@@ -167,15 +171,16 @@ public class MainWindowViewModel : BaseViewModel
     }
 
     private bool CanSetPlayMode(object arg) => !_isPlayMode && ActivePack.Questions.Count > 0;
-    private void SetPlayMode(object obj)
+    private async void SetPlayMode(object obj)
     {
         IsPlayMode = true;
-        PlayerViewModel.Start();
+        await PlayerViewModel.Start();
     }
     private bool CanSetConfigurationMode(object arg) => _isPlayMode;
     private void SetConfigurationMode(object obj)
     {
         IsPlayMode = false;
+        PlayerViewModelTickingSound.Timer.Stop();
     }
     private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1 && !IsPlayMode;
     public void ClosePackOptions(object obj)

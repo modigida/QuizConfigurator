@@ -1,4 +1,7 @@
 ﻿
+
+using System.Windows.Threading;
+
 namespace QuizConfigurator.ViewModel;
 public class PlayerViewModelCheckAnswer : BaseViewModel
 {
@@ -103,4 +106,5 @@ public class PlayerViewModelCheckAnswer : BaseViewModel
         IsVisibleIncorrectIconAnswerThree = false;
     }
 
+    
 }

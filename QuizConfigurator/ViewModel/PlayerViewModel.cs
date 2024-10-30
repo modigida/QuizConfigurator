@@ -2,7 +2,6 @@
 using System.Speech.Synthesis;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace QuizConfigurator.ViewModel;
 public class PlayerViewModel : BaseViewModel
@@ -10,9 +9,8 @@ public class PlayerViewModel : BaseViewModel
     private SpeechSynthesizer? _speechSynthesizer;
 
     public PlayerViewModelCheckAnswer PlayerViewModelCheckAnswer { get; }
+    public PlayerViewModelTimer PlayerViewModelTickingSound { get; }
     public readonly MainWindowViewModel MainWindowViewModel;
-
-    private DispatcherTimer _timer;
 
     private int _correctAnswerIndex;
     private List<QuestionViewModel>? _randomizedQuestions;
@@ -88,7 +86,7 @@ public class PlayerViewModel : BaseViewModel
     public int RemainingTime
     {
         get => _remainingTime;
-        private set
+        set
         {
             _remainingTime = value;
             OnPropertyChanged();
@@ -166,18 +164,18 @@ public class PlayerViewModel : BaseViewModel
     public ICommand PickAnswerCommand { get; }
     public ICommand RestartGameCommand { get; }
     public ICommand SetSoundSettingCommand { get; }
-    public PlayerViewModel(MainWindowViewModel mainWindowViewModel, PlayerViewModelCheckAnswer playerViewModelCheckAnswer)
+    public PlayerViewModel(MainWindowViewModel mainWindowViewModel, PlayerViewModelCheckAnswer 
+        playerViewModelCheckAnswer, PlayerViewModelTimer playerViewModelTickingSound)
     {
         CreateVoiceFeature();
 
         PlayerViewModelCheckAnswer = playerViewModelCheckAnswer;
+        PlayerViewModelTickingSound = playerViewModelTickingSound;
         MainWindowViewModel = mainWindowViewModel;
 
         PlayerViewModelCheckAnswer.HideAnswerIcons();
 
-        _timer = new DispatcherTimer();
-        _timer.Interval = TimeSpan.FromSeconds(1);
-        _timer.Tick += Timer_Tick;
+        PlayerViewModelTickingSound.InitializeTimer(this);
 
         PickAnswerCommand = new RelayCommand(PickAnswer);
         RestartGameCommand = new RelayCommand(RestartGame);
@@ -203,7 +201,7 @@ public class PlayerViewModel : BaseViewModel
             await Task.Run(() => _speechSynthesizer.Speak(textToRead));
         }
     }
-    public void Start()
+    public async Task Start()
     {
         IsGameOver = false;
 
@@ -221,18 +219,18 @@ public class PlayerViewModel : BaseViewModel
         if (MainWindowViewModel.ActivePack != null)
         {
             _randomizedQuestions = MainWindowViewModel.ActivePack.Questions.ToList();
-            InitializeQuestions(_randomizedQuestions);
+            await InitializeQuestions(_randomizedQuestions);
             IsPlaying = true;
         }
     }
-    private void InitializeQuestions(List<QuestionViewModel> questions)
+    private async Task InitializeQuestions(List<QuestionViewModel> questions)
     {
         var random = new Random();
         _randomizedQuestions = questions.OrderBy(q => random.Next()).ToList();
         CurrentQuestionNumber = 0;
-        LoadNextQuestion();
+        await LoadNextQuestion();
     }
-    private async Task LoadNextQuestion()
+    public async Task LoadNextQuestion()
     {
         if (_randomizedQuestions != null && CurrentQuestionNumber < _randomizedQuestions.Count)
         {
@@ -249,7 +247,7 @@ public class PlayerViewModel : BaseViewModel
 
             _correctAnswerIndex = CurrentAnswerOptions.IndexOf(CurrentQuestion.CorrectAnswer);
 
-            StartTimer();
+            PlayerViewModelTickingSound.StartTimer();
 
             if (IsSoundOn)
             {
@@ -261,54 +259,17 @@ public class PlayerViewModel : BaseViewModel
         else
         {
             IsGameOver = true;
-            _timer.Stop();
-        }
-    }
-    public void StartTimer()
-    {
-        if (MainWindowViewModel.ActivePack != null)
-        {
-            RemainingTime = MainWindowViewModel.ActivePack.TimeLimitInSeconds;
-            _timer.Start();
-        }
-    }
-    private void Timer_Tick(object? sender, EventArgs e)
-    {
-        if (RemainingTime > 0)
-        {
-            if (RemainingTime <= 6 && IsSoundOn)
-            {
-                PlayTickSound();
-            }
-
-            RemainingTime--;
-        }
-        else
-        {
-            _timer.Stop();
-            LoadNextQuestion();
-        }
-    }
-    private void PlayTickSound()
-    {
-        try
-        {
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer("Resources\\tick.wav");
-            player.Play();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Kunde inte spela tick-ljudet: " + ex.Message);
+            PlayerViewModelTickingSound.Timer.Stop();
         }
     }
     private async void PickAnswer(object selectedAnswer)
     {
-        if (_timer.IsEnabled)
+        if (PlayerViewModelTickingSound.Timer.IsEnabled)
         {
-            _timer.Stop();
+            PlayerViewModelTickingSound.Timer.Stop();
             await PlayerViewModelCheckAnswer.CheckAnswer(selectedAnswer, this);
-            LoadNextQuestion();
+            await LoadNextQuestion();
         }
     }
-    private void RestartGame(object obj) => Start();
+    private async void RestartGame(object obj) => await Start();
 }
