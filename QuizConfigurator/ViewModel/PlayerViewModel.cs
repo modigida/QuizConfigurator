@@ -323,49 +323,10 @@ public class PlayerViewModel : BaseViewModel
             int selectedIndex = CurrentAnswerOptions.IndexOf(answer);
             int correctIndex = CurrentAnswerOptions.IndexOf(CurrentQuestion.CorrectAnswer);
 
-            IsVisibleCorrectIconAnswerZero = false;
-            IsVisibleIncorrectIconAnswerZero = false;
-            IsVisibleCorrectIconAnswerOne = false;
-            IsVisibleIncorrectIconAnswerOne = false;
-            IsVisibleCorrectIconAnswerTwo = false;
-            IsVisibleIncorrectIconAnswerTwo = false;
-            IsVisibleCorrectIconAnswerThree = false;
-            IsVisibleIncorrectIconAnswerThree = false;
+            HideAnswerIcons();
 
-            switch (correctIndex)
-            {
-                case 0:
-                    IsVisibleCorrectIconAnswerZero = true;
-                    break;
-                case 1:
-                    IsVisibleCorrectIconAnswerOne = true;
-                    break;
-                case 2:
-                    IsVisibleCorrectIconAnswerTwo = true;
-                    break;
-                case 3:
-                    IsVisibleCorrectIconAnswerThree = true;
-                    break;
-            }
-
-            if (!IsAnswerCorrect)
-            {
-                switch (selectedIndex)
-                {
-                    case 0:
-                        IsVisibleIncorrectIconAnswerZero = true;
-                        break;
-                    case 1:
-                        IsVisibleIncorrectIconAnswerOne = true;
-                        break;
-                    case 2:
-                        IsVisibleIncorrectIconAnswerTwo = true;
-                        break;
-                    case 3:
-                        IsVisibleIncorrectIconAnswerThree = true;
-                        break;
-                }
-            }
+            DisplayCorrectAnswerIcon(correctIndex);
+            DisplaySelectedIncorrectAnswerIcon(selectedIndex);
 
             await ExecuteVoice(IsAnswerCorrect ? "Correct" : "Wrong answer");
 
@@ -374,35 +335,78 @@ public class PlayerViewModel : BaseViewModel
                 AmountOfCorrectAnswers++;
             }
 
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerZero));
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerOne));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerOne));
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerTwo));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
+            UpdateIconVisibility();
 
             await Task.Delay(1000);
 
-            IsVisibleCorrectIconAnswerZero = false;
-            IsVisibleIncorrectIconAnswerZero = false;
-            IsVisibleCorrectIconAnswerOne = false;
-            IsVisibleIncorrectIconAnswerOne = false;
-            IsVisibleCorrectIconAnswerTwo = false;
-            IsVisibleIncorrectIconAnswerTwo = false;
-            IsVisibleCorrectIconAnswerThree = false;
-            IsVisibleIncorrectIconAnswerThree = false;
-
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerZero));
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerOne));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerOne));
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerTwo));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
-            OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
-            OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
+            HideAnswerIcons();
+            
+            UpdateIconVisibility();
         }
     }
+
+    private void UpdateIconVisibility()
+    {
+        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
+        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerZero));
+        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerOne));
+        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerOne));
+        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerTwo));
+        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerTwo));
+        OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerThree));
+        OnPropertyChanged(nameof(IsVisibleIncorrectIconAnswerThree));
+    }
+
+    private void DisplayCorrectAnswerIcon(int correctIndex)
+    {
+        switch (correctIndex)
+        {
+            case 0:
+                IsVisibleCorrectIconAnswerZero = true;
+                break;
+            case 1:
+                IsVisibleCorrectIconAnswerOne = true;
+                break;
+            case 2:
+                IsVisibleCorrectIconAnswerTwo = true;
+                break;
+            case 3:
+                IsVisibleCorrectIconAnswerThree = true;
+                break;
+        }
+    }
+    private void DisplaySelectedIncorrectAnswerIcon(int selectedIndex)
+    {
+        if (!IsAnswerCorrect)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    IsVisibleIncorrectIconAnswerZero = true;
+                    break;
+                case 1:
+                    IsVisibleIncorrectIconAnswerOne = true;
+                    break;
+                case 2:
+                    IsVisibleIncorrectIconAnswerTwo = true;
+                    break;
+                case 3:
+                    IsVisibleIncorrectIconAnswerThree = true;
+                    break;
+            }
+        }
+    }
+    private void HideAnswerIcons()
+    {
+        IsVisibleCorrectIconAnswerZero = false;
+        IsVisibleIncorrectIconAnswerZero = false;
+        IsVisibleCorrectIconAnswerOne = false;
+        IsVisibleIncorrectIconAnswerOne = false;
+        IsVisibleCorrectIconAnswerTwo = false;
+        IsVisibleIncorrectIconAnswerTwo = false;
+        IsVisibleCorrectIconAnswerThree = false;
+        IsVisibleIncorrectIconAnswerThree = false;
+    }
+
     private void RestartGame(object obj) => Start();
 }
