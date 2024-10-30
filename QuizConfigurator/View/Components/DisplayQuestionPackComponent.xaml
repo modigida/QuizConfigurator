@@ -24,10 +24,11 @@
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
             MinHeight="400">
-            
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+
+            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
                 <ListView
                     BorderThickness="0"
+                    MaxHeight="390"
                     SelectionMode="Multiple"
                     ItemsSource="{Binding ActivePack.Questions}"
                     helper:ListViewHelper.BindableSelectedItems="{Binding ConfigurationViewModel.SelectedItems}"

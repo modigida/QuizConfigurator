@@ -23,7 +23,9 @@
         <KeyBinding Key="P" Modifiers="Ctrl" Command="{Binding SetPlayModeCommand}" />
         <KeyBinding Key="E" Modifiers="Ctrl" Command="{Binding SetConfigurationModeCommand}" />
 
-        <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding ImportQuestionsCommand}" />
+        <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding OpenImportQuestionsCommand}" />
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveToJsonCommand}" />
+
         <KeyBinding Key="Insert" Command="{Binding ConfigurationViewModel.AddQuestionCommand}" />
 
     </Window.InputBindings>

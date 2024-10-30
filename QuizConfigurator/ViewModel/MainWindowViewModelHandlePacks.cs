@@ -68,7 +68,7 @@ public class MainWindowViewModelHandlePacks : BaseViewModel
             CommandManager.InvalidateRequerySuggested();
             OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
         }
-        _mainWindowViewModel.ClosePackOptions(obj);
+        _mainWindowViewModel.ClosePackDialog(obj);
     }
     public void EditPackOptions(object obj)
     {
@@ -90,7 +90,7 @@ public class MainWindowViewModelHandlePacks : BaseViewModel
         {
             OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
         }
-        _mainWindowViewModel.ClosePackOptions(obj);
+        _mainWindowViewModel.ClosePackDialog(obj);
     }
     public void RemoveQuestionPack(object obj)
     {

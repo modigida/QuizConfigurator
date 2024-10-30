@@ -1,10 +1,15 @@
-﻿using QuizConfigurator.Commands;
+﻿using QuizConfigurator.API;
+using QuizConfigurator.Commands;
 using QuizConfigurator.Service;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Input;
+using Newtonsoft.Json;
+using QuizConfigurator.Model;
+using Application = System.Windows.Application;
 
 namespace QuizConfigurator.ViewModel;
 public class MainWindowViewModel : BaseViewModel
@@ -74,6 +79,7 @@ public class MainWindowViewModel : BaseViewModel
     public QuestionViewModel QuestionViewModel { get; }
     public PlayerViewModelTimer PlayerViewModelTickingSound { get; }
     public MainWindowViewModelHandlePacks MainWindowViewModelHandlePacks { get; }
+    public ImportQuestionsViewModel ImportQuestionsViewModel { get; }
 
     private ObservableCollection<QuestionPackViewModel> _packs;
     public ObservableCollection<QuestionPackViewModel> Packs
@@ -86,7 +92,6 @@ public class MainWindowViewModel : BaseViewModel
             CommandManager.InvalidateRequerySuggested();
         }
     }
-
     public ICommand ToggleFullScreenCommand { get; }
     public ICommand ExitProgramCommand { get; }
     public ICommand SetPlayModeCommand { get; }
@@ -94,6 +99,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand SetActivePackCommand { get; }
     public ICommand CreateNewPackCommand { get; }
     public ICommand CurrentPackCommand { get; set; }
+    public ICommand SaveToJsonCommand { get; set; }
 
     private ICommand _removeQuestionPackCommand;
     public ICommand RemoveQuestionPackCommand
@@ -104,7 +110,7 @@ public class MainWindowViewModel : BaseViewModel
                 CanRemoveQuestionPack);
         }
     }
-    public ICommand ImportQuestionsCommand { get; }
+    public ICommand OpenImportQuestionsCommand { get; }
 
     public MainWindowViewModel()
     {
@@ -120,7 +126,8 @@ public class MainWindowViewModel : BaseViewModel
         ConfigurationViewModel = new ConfigurationViewModel(this);
         QuestionPackViewModel = new QuestionPackViewModel();
         QuestionViewModel = new QuestionViewModel();
-        
+
+        ImportQuestionsViewModel = new ImportQuestionsViewModel(this);
 
         _isPlayMode = false;
 
@@ -130,9 +137,15 @@ public class MainWindowViewModel : BaseViewModel
         SetConfigurationModeCommand = new RelayCommand(SetConfigurationMode, CanSetConfigurationMode);
         SetActivePackCommand = new RelayCommand(MainWindowViewModelHandlePacks.SetActivePack);
         CreateNewPackCommand = new RelayCommand(MainWindowViewModelHandlePacks.CreateNewPack);
-        ImportQuestionsCommand = new RelayCommand(ImportQuestions, CanImportQuestions);
-
+        OpenImportQuestionsCommand = new RelayCommand(ImportQuestionsViewModel.OpenImportQuestions, CanImportQuestions);
+        SaveToJsonCommand = new RelayCommand(SaveToJson);
+        
         Packs.CollectionChanged += Packs_CollectionChanged;
+    }
+
+    private async void SaveToJson(object obj)
+    {
+        await JsonHandler.SavePacksToJson(this);
     }
 
     private async void LoadPacksAsync()
@@ -183,16 +196,12 @@ public class MainWindowViewModel : BaseViewModel
         PlayerViewModelTickingSound.Timer.Stop();
     }
     private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1 && !IsPlayMode;
-    public void ClosePackOptions(object obj)
+    public void ClosePackDialog(object obj)
     {
         var window = (Window)obj;
         window.Close();
     }
-    private bool CanImportQuestions(object arg) => !_isPlayMode;
-    private void ImportQuestions(object obj)
-    {
-        throw new NotImplementedException();
-    }
+    private bool CanImportQuestions(object arg) => !_isPlayMode && ActivePack != null;
 
     private async void ExitProgram(object obj)
     {

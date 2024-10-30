@@ -95,7 +95,7 @@ public class ConfigurationViewModel : BaseViewModel
 
         AddQuestionCommand = new RelayCommand(AddQuestion, CanAddQuestion);
         EditPackOptionsCommand = new RelayCommand(_mainWindowViewModelHandlePacks.EditPackOptions, CanEditPackOptions);
-        ClosePackOptionsCommand = new RelayCommand(mainWindowViewModel.ClosePackOptions);
+        ClosePackOptionsCommand = new RelayCommand(mainWindowViewModel.ClosePackDialog);
 
         SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
 

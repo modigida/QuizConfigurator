@@ -38,7 +38,7 @@
                 <Separator/>
                 <MenuItem 
                     Header="_Import Questions" 
-                    Command="{Binding ImportQuestionsCommand}"
+                    Command="{Binding OpenImportQuestionsCommand}"
                     Icon="{fa:Icon Fileimport}"/>
                 <Separator/>
                 <MenuItem 
