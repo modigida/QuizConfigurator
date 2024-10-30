@@ -1,5 +1,4 @@
 ﻿using QuizConfigurator.Commands;
-using QuizConfigurator.Model;
 using QuizConfigurator.Service;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
@@ -20,6 +19,7 @@ public class MainWindowViewModel : BaseViewModel
         {
             _isPlayMode = value;
             OnPropertyChanged();
+            CommandManager.InvalidateRequerySuggested();
         }
     }
 
@@ -72,6 +72,7 @@ public class MainWindowViewModel : BaseViewModel
     public ConfigurationViewModel ConfigurationViewModel { get; }
     public QuestionPackViewModel QuestionPackViewModel { get; }
     public QuestionViewModel QuestionViewModel { get; }
+    public MainWindowViewModelHandlePacks MainWindowViewModelHandlePacks { get; }
 
     private ObservableCollection<QuestionPackViewModel> _packs;
     public ObservableCollection<QuestionPackViewModel> Packs
@@ -98,7 +99,8 @@ public class MainWindowViewModel : BaseViewModel
     {
         get
         {
-            return _removeQuestionPackCommand ??= new RelayCommand(RemoveQuestionPack, CanRemoveQuestionPack);
+            return _removeQuestionPackCommand ??= new RelayCommand(MainWindowViewModelHandlePacks.RemoveQuestionPack, 
+                CanRemoveQuestionPack);
         }
     }
     public ICommand ImportQuestionsCommand { get; }
@@ -109,6 +111,7 @@ public class MainWindowViewModel : BaseViewModel
 
         LoadPacksAsync();
 
+        MainWindowViewModelHandlePacks = new MainWindowViewModelHandlePacks(this);
         PlayerViewModelCheckAnswer = new PlayerViewModelCheckAnswer();
         PlayerViewModel = new PlayerViewModel(this, PlayerViewModelCheckAnswer);
         ConfigurationViewModel = new ConfigurationViewModel(this);
@@ -121,8 +124,8 @@ public class MainWindowViewModel : BaseViewModel
         ExitProgramCommand = new RelayCommand(ExitProgram);
         SetPlayModeCommand = new RelayCommand(SetPlayMode, CanSetPlayMode);
         SetConfigurationModeCommand = new RelayCommand(SetConfigurationMode, CanSetConfigurationMode);
-        SetActivePackCommand = new RelayCommand(SetActivePack);
-        CreateNewPackCommand = new RelayCommand(CreateNewPack);
+        SetActivePackCommand = new RelayCommand(MainWindowViewModelHandlePacks.SetActivePack);
+        CreateNewPackCommand = new RelayCommand(MainWindowViewModelHandlePacks.CreateNewPack);
         ImportQuestionsCommand = new RelayCommand(ImportQuestions, CanImportQuestions);
 
         Packs.CollectionChanged += Packs_CollectionChanged;
@@ -130,24 +133,11 @@ public class MainWindowViewModel : BaseViewModel
 
     private async void LoadPacksAsync()
     {
-        await JsonHandler.LoadPacksFromJson(this);
+        await JsonHandler.LoadPacksFromJson(this, MainWindowViewModelHandlePacks);
     }
     private async void Packs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         await JsonHandler.SavePacksToJson(this);
-    }
-    public void SetDefaultActivePack()
-    {
-        if (Packs.Count == 0)
-        {
-            ActivePack = new QuestionPackViewModel(new QuestionPack("Default Pack"));
-            Packs.Add(ActivePack);
-        }
-        else
-        {
-            ActivePack = Packs.FirstOrDefault();
-        }
-        Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
     }
     
     private void ToggleFullScreen(object obj)
@@ -178,24 +168,10 @@ public class MainWindowViewModel : BaseViewModel
     {
         IsPlayMode = false;
     }
-    private void SetActivePack(object obj)
-    {
-        ActivePack = obj as QuestionPackViewModel;
-        ConfigurationViewModel.ActiveQuestion = null;
-        ConfigurationViewModel.SelectedItems.Clear();
-        OnPropertyChanged(nameof(ConfigurationViewModel.SelectedItems));
-        OnPropertyChanged(nameof(ConfigurationViewModel.ActiveQuestion));
-        OnPropertyChanged(nameof(ActivePack));
-        CommandManager.InvalidateRequerySuggested();
-    }
-    private void CreateNewPack(object obj)
-    {
-        ButtonToggleContent = "Create";
-        CurrentPackCommand = new RelayCommand(AddNewPack);
-        _useActivePack = false;
+    private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1 && !IsPlayMode;
 
-        NewPack = new QuestionPackViewModel(new QuestionPack("<PackName>"));
-
+    public void OpenPackOptions()
+    {
         var packDialog = new PackDialog
         {
             Owner = ParentWindow,
@@ -209,42 +185,10 @@ public class MainWindowViewModel : BaseViewModel
             CommandManager.InvalidateRequerySuggested();
         }
     }
-    private void AddNewPack(object obj)
-    {
-        if (NewPack != null)
-        {
-            var newPackViewModel = new QuestionPackViewModel(new QuestionPack(NewPack.Name, NewPack.Difficulty, NewPack.TimeLimitInSeconds));
-
-            Packs.Add(newPackViewModel);
-
-            ActivePack = newPackViewModel;
-
-            CommandManager.InvalidateRequerySuggested();
-
-            OnPropertyChanged(nameof(ActivePack));
-        }
-        ClosePackOptions(obj);
-    }
     public void ClosePackOptions(object obj)
     {
         var window = (Window)obj;
         window.Close();
-    }
-    private bool CanRemoveQuestionPack(object obj) => Packs.Count > 1 && !IsPlayMode;
-    private void RemoveQuestionPack(object obj)
-    {
-        if (ActivePack != null)
-        {
-            MessageBoxResult result;
-            var messageDeletePack = $"Sure to delete {ActivePack.Name}?";
-            result = MessageBox.Show(messageDeletePack, "Delete Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
-            {
-                Packs.Remove(ActivePack);
-                ActivePack = Packs.FirstOrDefault();
-            }
-            CommandManager.InvalidateRequerySuggested();
-        }
     }
     private bool CanImportQuestions(object arg) => !_isPlayMode;
     private void ImportQuestions(object obj)

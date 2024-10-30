@@ -8,7 +8,8 @@ using System.Collections.ObjectModel;
 namespace QuizConfigurator.Service;
 public class JsonHandler
 {
-    public static async Task LoadPacksFromJson(MainWindowViewModel mainWindowViewModel)
+    public static async Task LoadPacksFromJson(MainWindowViewModel mainWindowViewModel, 
+        MainWindowViewModelHandlePacks windowViewModelHandlePacks)
     {
         try
         {
@@ -30,7 +31,7 @@ public class JsonHandler
             }
             else
             {
-                mainWindowViewModel.SetDefaultActivePack();
+                windowViewModelHandlePacks.SetDefaultActivePack();
             }
         }
         catch (Exception ex)
