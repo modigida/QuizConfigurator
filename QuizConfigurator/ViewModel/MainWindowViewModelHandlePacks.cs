@@ -70,6 +70,28 @@ public class MainWindowViewModelHandlePacks : BaseViewModel
         }
         _mainWindowViewModel.ClosePackOptions(obj);
     }
+    public void EditPackOptions(object obj)
+    {
+        _mainWindowViewModel.ButtonToggleContent = "Edit";
+        _mainWindowViewModel.CurrentPackCommand = new RelayCommand(SaveEditPackOptions);
+        _mainWindowViewModel.UseActivePack = true;
+
+        var packDialog = _mainWindowViewModel.OpenPackDialog();
+
+        if (packDialog.ShowDialog() == true)
+        {
+            OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
+            CommandManager.InvalidateRequerySuggested();
+        }
+    }
+    private void SaveEditPackOptions(object obj)
+    {
+        if (_mainWindowViewModel.ActivePack != null)
+        {
+            OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
+        }
+        _mainWindowViewModel.ClosePackOptions(obj);
+    }
     public void RemoveQuestionPack(object obj)
     {
         if (_mainWindowViewModel.ActivePack != null)
