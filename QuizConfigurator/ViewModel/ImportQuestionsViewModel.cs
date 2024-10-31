@@ -4,7 +4,9 @@ using QuizConfigurator.Commands;
 using QuizConfigurator.Model;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 
 namespace QuizConfigurator.ViewModel;
@@ -104,6 +106,8 @@ public class ImportQuestionsViewModel : BaseViewModel
             string difficulty = Difficulty.ToString().ToLower();
             await GetTriviaQuestionsAsync(amount, category, difficulty);
             _mainWindowViewModel.ClosePackDialog(ImportDialog);
+            await Task.Delay(1000);
+            _mainWindowViewModel.CurrentMessageContent = string.Empty;
         }
         catch (Exception ex)
         {
@@ -126,8 +130,11 @@ public class ImportQuestionsViewModel : BaseViewModel
 
                 foreach (var question in result.results)
                 {
-                    var newQuestion = new QuestionViewModel(new Question(question.question,
-                        question.correct_answer, question.incorrect_answers));
+                    string decodedQuestion = WebUtility.HtmlDecode(question.question);
+                    string decodedCorrectAnswer = WebUtility.HtmlDecode(question.correct_answer);
+                    string[] decodedIncorrectAnswers = question.incorrect_answers.Select(WebUtility.HtmlDecode).ToArray();
+
+                    var newQuestion = new QuestionViewModel(new Question(decodedQuestion, decodedCorrectAnswer, decodedIncorrectAnswers));
                     _mainWindowViewModel.ActivePack?.Questions.Add(newQuestion);
                 }
             }
