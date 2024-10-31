@@ -147,10 +147,11 @@
                         Margin="10,0"/>
                 </Grid>
 
-                <WrapPanel 
+                <StackPanel 
                     Grid.Row="1" 
                     Orientation="Horizontal" 
-                    MaxHeight="250">
+                    MaxHeight="250" 
+                    HorizontalAlignment="Center">
                     <TextBlock 
                         Text="{Binding PlayerViewModel.CurrentQuestion.Query}" 
                         FontSize="34" 
@@ -158,8 +159,8 @@
                         TextAlignment="Center"
                         Height="200"
                         VerticalAlignment="Top"
-                        TextTrimming="WordEllipsis"/>
-                </WrapPanel>
+                        TextTrimming="WordEllipsis" />
+                </StackPanel>
 
                 <DockPanel 
                     Grid.Row="2"
