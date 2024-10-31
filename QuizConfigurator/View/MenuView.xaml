@@ -10,7 +10,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Menu>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Column="0">
             <MenuItem 
                 Header="_File">
                 <MenuItem 
@@ -80,5 +85,11 @@
                     Icon="{fa:Icon Expand}"/>
             </MenuItem>
         </Menu>
+        <StackPanel Grid.Column="1">
+            <TextBlock 
+                Text="{Binding CurrentMessageContent, Mode=TwoWay}" 
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </UserControl>

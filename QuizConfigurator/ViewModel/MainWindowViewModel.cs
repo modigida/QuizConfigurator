@@ -69,6 +69,16 @@ public class MainWindowViewModel : BaseViewModel
             OnPropertyChanged(nameof(UseActivePack));
         }
     }
+    private string _currentMessageContent;
+    public string CurrentMessageContent
+    {
+        get => _currentMessageContent;
+        set
+        {
+            _currentMessageContent = value;
+            OnPropertyChanged();
+        }
+    }
 
     public Window ParentWindow => Application.Current.MainWindow;
     public QuestionPackViewModel? CurrentPack => _useActivePack ? ActivePack : NewPack;
@@ -80,6 +90,7 @@ public class MainWindowViewModel : BaseViewModel
     public PlayerViewModelTimer PlayerViewModelTickingSound { get; }
     public MainWindowViewModelHandlePacks MainWindowViewModelHandlePacks { get; }
     public ImportQuestionsViewModel ImportQuestionsViewModel { get; }
+    
 
     private ObservableCollection<QuestionPackViewModel> _packs;
     public ObservableCollection<QuestionPackViewModel> Packs

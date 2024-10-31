@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Windows;
 using QuizConfigurator.ViewModel;
 using System.Collections.ObjectModel;
+using QuizConfigurator.View.Dialogs;
 
 namespace QuizConfigurator.Service;
 public class JsonHandler
@@ -47,6 +48,12 @@ public class JsonHandler
             string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "packs.json");
             string contents = JsonSerializer.Serialize(mainWindowViewModel.Packs);
             await File.WriteAllTextAsync(filePath, contents);
+
+            mainWindowViewModel.CurrentMessageContent = "Packs saved successfully";
+            
+            await Task.Delay(1000);
+
+            mainWindowViewModel.CurrentMessageContent = string.Empty;
         }
         catch (Exception ex)
         {

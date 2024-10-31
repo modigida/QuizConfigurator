@@ -1,12 +1,10 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using QuizConfigurator.API;
 using QuizConfigurator.Commands;
 using QuizConfigurator.Model;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Net.Http;
-using System.Windows;
 using System.Windows.Input;
 
 namespace QuizConfigurator.ViewModel;
@@ -14,7 +12,6 @@ public class ImportQuestionsViewModel : BaseViewModel
 {
     private MainWindowViewModel _mainWindowViewModel;
     public ImportQuestionsDialog ImportDialog { get; set; }
-
     public OpenTriviaCategories Category { get; set; }
 
     private Difficulty _difficulty = Difficulty.Medium;
@@ -57,7 +54,6 @@ public class ImportQuestionsViewModel : BaseViewModel
         ExecuteImportCommand = new RelayCommand(ExecuteImportQuestions);
         CancelImportDialogCommand = new RelayCommand(mainWindowViewModel.ClosePackDialog);
     }
-
     public async void OpenImportQuestions(object obj)
     {
         var importDialog = new ImportQuestionsDialog
@@ -69,43 +65,64 @@ public class ImportQuestionsViewModel : BaseViewModel
         ImportDialog = importDialog;
         importDialog.ShowDialog();
     }
-
     private async Task LoadCategoriesAsync()
     {
-        using (var client = new HttpClient())
+        try
         {
-            var url = "https://opentdb.com/api_category.php";
-            var response = await client.GetStringAsync(url);
-
-            var result = JsonConvert.DeserializeObject<OpenTriviaResponse>(response);
-
-            foreach (var category in result.trivia_categories)
+            using (var client = new HttpClient())
             {
-                Categories.Add(category);
+                var url = "https://opentdb.com/api_category.php";
+                var response = await client.GetStringAsync(url);
+
+                var result = JsonConvert.DeserializeObject<OpenTriviaResponse>(response);
+
+                foreach (var category in result.trivia_categories)
+                {
+                    Categories.Add(category);
+                }
+
+                Category = Categories.FirstOrDefault();
             }
 
-            Category = Categories.FirstOrDefault();
+            _mainWindowViewModel.CurrentMessageContent = "Categories loaded successfully";
+
+            await Task.Delay(1000);
+
+            _mainWindowViewModel.CurrentMessageContent = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            _mainWindowViewModel.CurrentMessageContent = "Failed to load categories";
         }
     }
     private async void ExecuteImportQuestions(object obj)
     {
-        string amount = NumberOfQuestions.ToString();
-        string category = Category.Id.ToString();
-        string difficulty = Difficulty.ToString().ToLower();
-        await GetTriviaQuestionsAsync(amount, category, difficulty);
-        _mainWindowViewModel.ClosePackDialog(ImportDialog);
+        try
+        {
+            string amount = NumberOfQuestions.ToString();
+            string category = Category.Id.ToString();
+            string difficulty = Difficulty.ToString().ToLower();
+            await GetTriviaQuestionsAsync(amount, category, difficulty);
+            _mainWindowViewModel.ClosePackDialog(ImportDialog);
+        }
+        catch (Exception ex)
+        {
+            _mainWindowViewModel.CurrentMessageContent = $"{ex.Message}";
+        }
     }
-
     public async Task GetTriviaQuestionsAsync(string amount, string category, string difficulty)
     {
-        using (var client = new HttpClient())
+        try
         {
-            try
+            _mainWindowViewModel.CurrentMessageContent = "Loading questions";
+            using (var client = new HttpClient())
             {
                 string url = @$"https://opentdb.com/api.php?amount={amount}&category={category}&difficulty={difficulty}&type=multiple";
                 var response = await client.GetStringAsync(url);
 
                 var result = JsonConvert.DeserializeObject<OpenTriviaResponse>(response);
+
+                _mainWindowViewModel.CurrentMessageContent = OpenTriviaResponse.GetResponseMessage(result.response_code);
 
                 foreach (var question in result.results)
                 {
@@ -114,11 +131,10 @@ public class ImportQuestionsViewModel : BaseViewModel
                     _mainWindowViewModel.ActivePack?.Questions.Add(newQuestion);
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+        }
+        catch (Exception ex)
+        {
+            _mainWindowViewModel.CurrentMessageContent = "Failed to load questions";
         }
     }
-
 }
