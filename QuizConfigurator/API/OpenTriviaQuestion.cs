@@ -1,5 +1,4 @@
-﻿
-namespace QuizConfigurator.API;
+﻿namespace QuizConfigurator.API;
 public class OpenTriviaQuestion
 {
     public string? category { get; set; }

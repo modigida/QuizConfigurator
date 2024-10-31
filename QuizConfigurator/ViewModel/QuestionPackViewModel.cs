@@ -1,14 +1,11 @@
 ﻿using QuizConfigurator.Model;
 using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
 
 namespace QuizConfigurator.ViewModel;
 public class QuestionPackViewModel : BaseViewModel
 {
     private readonly QuestionPack _model;
     public QuestionPack Model => _model;
-
-
     public string Name
     {
         get => _model.Name;

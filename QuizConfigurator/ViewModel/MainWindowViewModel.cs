@@ -1,14 +1,10 @@
-﻿using QuizConfigurator.API;
-using QuizConfigurator.Commands;
+﻿using QuizConfigurator.Commands;
 using QuizConfigurator.Service;
 using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Net.Http;
 using System.Windows;
 using System.Windows.Input;
-using Newtonsoft.Json;
-using QuizConfigurator.Model;
 using Application = System.Windows.Application;
 
 namespace QuizConfigurator.ViewModel;
@@ -90,7 +86,6 @@ public class MainWindowViewModel : BaseViewModel
     public PlayerViewModelTimer PlayerViewModelTickingSound { get; }
     public MainWindowViewModelHandlePacks MainWindowViewModelHandlePacks { get; }
     public ImportQuestionsViewModel ImportQuestionsViewModel { get; }
-    
 
     private ObservableCollection<QuestionPackViewModel> _packs;
     public ObservableCollection<QuestionPackViewModel> Packs
@@ -158,7 +153,6 @@ public class MainWindowViewModel : BaseViewModel
     {
         await JsonHandler.SavePacksToJson(this);
     }
-
     private async void LoadPacksAsync()
     {
         await JsonHandler.LoadPacksFromJson(this, MainWindowViewModelHandlePacks);
@@ -167,7 +161,6 @@ public class MainWindowViewModel : BaseViewModel
     {
         await JsonHandler.SavePacksToJson(this);
     }
-    
     private void ToggleFullScreen(object obj)
     {
         var window = Application.Current.MainWindow;
@@ -193,7 +186,6 @@ public class MainWindowViewModel : BaseViewModel
         };
         return packDialog;
     }
-
     private bool CanSetPlayMode(object arg) => !_isPlayMode && ActivePack.Questions.Count > 0;
     private async void SetPlayMode(object obj)
     {
@@ -213,7 +205,6 @@ public class MainWindowViewModel : BaseViewModel
         window.Close();
     }
     private bool CanImportQuestions(object arg) => !_isPlayMode && ActivePack != null;
-
     private async void ExitProgram(object obj)
     {
         var result = MessageBox.Show("Are you sure you want to exit?", "Exit Program",

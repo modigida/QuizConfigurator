@@ -1,6 +1,5 @@
 ﻿using QuizConfigurator.Model;
 using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
 
 namespace QuizConfigurator.ViewModel;
 public class QuestionViewModel : BaseViewModel

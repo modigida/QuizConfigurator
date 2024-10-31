@@ -8,16 +8,14 @@ public class AutoFontSizeConverter : IValueConverter
     {
         if (value is string text)
         {
-            // Här kan du justera min/max storlek och logik för att beräkna storlek
-            if (text.Length > 30) // Justera detta värde beroende på vad som anses "för lång"
+            if (text.Length > 30)
             {
-                return 24; // Minska storleken
+                return 24;
             }
-            return 34; // Standard storlek
+            return 34;
         }
-        return 34; // Standard storlek om inget värde
+        return 34;
     }
-
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();

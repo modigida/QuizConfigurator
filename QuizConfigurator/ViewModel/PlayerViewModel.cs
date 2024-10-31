@@ -7,7 +7,6 @@ namespace QuizConfigurator.ViewModel;
 public class PlayerViewModel : BaseViewModel
 {
     private SpeechSynthesizer? _speechSynthesizer;
-
     public PlayerViewModelCheckAnswer PlayerViewModelCheckAnswer { get; }
     public PlayerViewModelTimer PlayerViewModelTickingSound { get; }
     public readonly MainWindowViewModel MainWindowViewModel;
@@ -160,7 +159,6 @@ public class PlayerViewModel : BaseViewModel
             OnPropertyChanged();
         }
     }
-
     public ICommand PickAnswerCommand { get; }
     public ICommand RestartGameCommand { get; }
     public ICommand SetSoundSettingCommand { get; }

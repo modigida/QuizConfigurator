@@ -1,5 +1,4 @@
-﻿
-using System.Windows.Threading;
+﻿using System.Windows.Threading;
 
 namespace QuizConfigurator.ViewModel;
 public class PlayerViewModelTimer : BaseViewModel

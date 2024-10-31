@@ -24,7 +24,6 @@ public class MainWindowViewModelHandlePacks : BaseViewModel
             _mainWindowViewModel.ActivePack = _mainWindowViewModel.Packs.FirstOrDefault();
         }
         _mainWindowViewModel.Packs.CollectionChanged += (s, e) => CommandManager.InvalidateRequerySuggested();
-
     }
     public void SetActivePack(object obj)
     {
@@ -36,7 +35,6 @@ public class MainWindowViewModelHandlePacks : BaseViewModel
         OnPropertyChanged(nameof(_mainWindowViewModel.ActivePack));
         CommandManager.InvalidateRequerySuggested();
     }
-
     public void CreateNewPack(object obj)
     {
         _mainWindowViewModel.ButtonToggleContent = "Create";

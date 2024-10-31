@@ -1,7 +1,4 @@
 ﻿
-
-using System.Windows.Threading;
-
 namespace QuizConfigurator.ViewModel;
 public class PlayerViewModelCheckAnswer : BaseViewModel
 {
@@ -42,7 +39,6 @@ public class PlayerViewModelCheckAnswer : BaseViewModel
             UpdateIconVisibility(playerViewModel);
         }
     }
-
     private void UpdateIconVisibility(PlayerViewModel playerViewModel)
     {
         OnPropertyChanged(nameof(IsVisibleCorrectIconAnswerZero));
@@ -105,6 +101,4 @@ public class PlayerViewModelCheckAnswer : BaseViewModel
         IsVisibleCorrectIconAnswerThree = false;
         IsVisibleIncorrectIconAnswerThree = false;
     }
-
-    
 }

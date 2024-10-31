@@ -6,7 +6,6 @@ using QuizConfigurator.View.Dialogs;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
 
 namespace QuizConfigurator.ViewModel;

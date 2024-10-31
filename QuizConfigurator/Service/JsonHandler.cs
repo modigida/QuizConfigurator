@@ -4,7 +4,6 @@ using System.Text.Json;
 using System.Windows;
 using QuizConfigurator.ViewModel;
 using System.Collections.ObjectModel;
-using QuizConfigurator.View.Dialogs;
 
 namespace QuizConfigurator.Service;
 public class JsonHandler
