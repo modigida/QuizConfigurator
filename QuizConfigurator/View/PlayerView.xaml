@@ -87,251 +87,270 @@
         
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+        <converters:AutoFontSizeConverter x:Key="AutoFontSizeConverter"/>
         
     </UserControl.Resources>
 
     <Grid>
         <Grid Visibility="{Binding PlayerViewModel.IsGameOver, Converter={StaticResource InverseBoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                
-                <StackPanel 
-                    Orientation="Horizontal" 
-                    DataContext="{Binding PlayerViewModel}"
-                    Margin="10,0">
-                    <Button 
-                        Command="{Binding SetSoundSettingCommand}" 
-                        Visibility="{Binding IsSoundOn, Converter={StaticResource BoolToVisibilityConverter}}"
-                        HorizontalAlignment="Left" 
-                        TabIndex="0"
-                        Width="50"
-                        Height="50"
-                        Style="{StaticResource SoundButton}">
-                        <Button.Content>
-                            <fa:IconBlock Icon="VolumeHigh"/>
-                        </Button.Content>
-                    </Button>
 
-                    <Button 
-                        Command="{Binding SetSoundSettingCommand}" 
-                        Visibility="{Binding IsSoundOn, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-                        HorizontalAlignment="Left" 
-                        TabIndex="0"
-                        Width="50"
-                        Height="50"
-                        Style="{StaticResource SoundButton}">
-                        <Button.Content>
-                            <fa:IconBlock Icon="VolumeMute"/>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
+                <Grid Grid.Row="0" HorizontalAlignment="Stretch" MaxWidth="1000">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Grid 
-                    Grid.Row="0" 
-                    HorizontalAlignment="Stretch">
-                    <TextBlock 
-                        Text="{Binding PlayerViewModel.RemainingTime}" 
-                        FontSize="34" 
-                        FontWeight="Bold"
-                        Width="40"
-                        HorizontalAlignment="Right"
-                        Margin="10,0"/>
+                    <StackPanel 
+                        Grid.Column="0"
+                        Orientation="Horizontal" 
+                        DataContext="{Binding PlayerViewModel}"
+                        Margin="10,10">
+
+                        <Button 
+                            Command="{Binding SetSoundSettingCommand}" 
+                            Visibility="{Binding IsSoundOn, Converter={StaticResource BoolToVisibilityConverter}}"
+                            HorizontalAlignment="Left" 
+                            TabIndex="0"
+                            Width="50"
+                            Height="50"
+                            Style="{StaticResource SoundButton}">
+                            <Button.Content>
+                                <fa:IconBlock Icon="VolumeHigh"/>
+                            </Button.Content>
+                        </Button>
+
+                        <Button 
+                            Command="{Binding SetSoundSettingCommand}" 
+                            Visibility="{Binding IsSoundOn, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+                            HorizontalAlignment="Left" 
+                            TabIndex="0"
+                            Width="50"
+                            Height="50"
+                            Style="{StaticResource SoundButton}">
+                            <Button.Content>
+                                <fa:IconBlock Icon="VolumeMute"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
+                    <Grid 
+                        Grid.Column="1" 
+                        HorizontalAlignment="Right">
+                        <TextBlock 
+                            Text="{Binding PlayerViewModel.RemainingTime}" 
+                            FontSize="34" 
+                            FontWeight="Bold"
+                            Width="40"
+                            HorizontalAlignment="Right"
+                            Margin="10,0"/>
+                    </Grid>
                 </Grid>
 
                 <StackPanel 
                     Grid.Row="1" 
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Stretch">
+                    VerticalAlignment="Center"
+                    Margin="10">
+
                     <TextBlock 
                         Text="{Binding PlayerViewModel.CurrentQuestion.Query}" 
-                        FontSize="34" 
+                        FontSize="{Binding PlayerViewModel.CurrentQuestion.Query, Converter={StaticResource AutoFontSizeConverter}}"
                         TextWrapping="Wrap" 
-                        TextAlignment="Center"
+                        MaxWidth="800" 
+                        TextAlignment="Center" 
                         VerticalAlignment="Center"
                         TextTrimming="WordEllipsis" />
                 </StackPanel>
-
-                <DockPanel 
-                    Grid.Row="2"
-                    Width="500">
-                    <TextBlock 
-                        Text="{Binding PlayerViewModel.CurrentQuestionInOrder}" 
-                        FontSize="14" 
-                        HorizontalAlignment="Stretch"
-                        TextAlignment="Center"
-                        Margin="10"/>
-                </DockPanel>
+                
             </Grid>
             
             <Grid 
                 Grid.Row="1" 
-                Width="450" 
-                Height="200"
-                Margin="0,30,0,0"
+                MaxWidth="750" 
+                MaxHeight="400"
                 DataContext="{Binding PlayerViewModel}">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
 
-                <Button 
-                    Command="{Binding PickAnswerCommand}"
-                    CommandParameter="{Binding CurrentAnswerOptions[0]}"
-                    Style="{StaticResource AnswereButton}"
-                    Width="200"    
-                    Height="70"  
-                    Margin="10" 
-                    Grid.Row="0" 
-                    Grid.Column="0"
-                    TabIndex="1">
-                    <Grid>
-                        <Image 
-                            Source="pack://application:,,,/Resources/correct.png" 
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <Image 
-                            Source="pack://application:,,,/Resources/incorrect.png" 
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBlock 
-                            Text="{Binding CurrentAnswerOptions[0]}"
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Width="180"
-                            Height="20"/>
-                    </Grid>
-                </Button>
+                <Grid Grid.Row="0">
+                    <TextBlock 
+                        Text="{Binding CurrentQuestionInOrder}" 
+                        FontSize="14" 
+                        HorizontalAlignment="Stretch"
+                        TextAlignment="Center"/>
+                </Grid>
 
-                <Button 
-                    Command="{Binding PickAnswerCommand}"
-                    CommandParameter="{Binding CurrentAnswerOptions[1]}"
-                    Style="{StaticResource AnswereButton}"
-                    Width="200"    
-                    Height="70"  
-                    Margin="10" 
-                    Grid.Row="0" 
-                    Grid.Column="1"
-                    TabIndex="2">
-                    <Grid>
-                        <Image 
-                            Source="pack://application:,,,/Resources/correct.png"  
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <Image 
-                            Source="pack://application:,,,/Resources/incorrect.png"  
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBlock 
-                            Text="{Binding CurrentAnswerOptions[1]}"
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Width="180"
-                            Height="20"/>
-                    </Grid>
-                </Button>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Button 
-                    Command="{Binding PickAnswerCommand}"
-                    CommandParameter="{Binding CurrentAnswerOptions[2]}"
-                    Style="{StaticResource AnswereButton}"
-                    Width="200"    
-                    Height="70"  
-                    Margin="10" 
-                    Grid.Row="1" 
-                    Grid.Column="0"
-                    TabIndex="2">
-                    <Grid>
-                        <Image 
-                            Source="pack://application:,,,/Resources/correct.png" 
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <Image 
-                            Source="pack://application:,,,/Resources/incorrect.png" 
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBlock 
-                            Text="{Binding CurrentAnswerOptions[2]}"
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Width="180"
-                            Height="20"/>
-                    </Grid>
-                </Button>
-                
-                <Button 
-                    Command="{Binding PickAnswerCommand}"
-                    CommandParameter="{Binding CurrentAnswerOptions[3]}"
-                    Style="{StaticResource AnswereButton}"
-                    Width="200"    
-                    Height="70"  
-                    Margin="10" 
-                    Grid.Row="1" 
-                    Grid.Column="1"
-                    TabIndex="2">
+                    <Button 
+                        Command="{Binding PickAnswerCommand}"
+                        CommandParameter="{Binding CurrentAnswerOptions[0]}"
+                        Style="{StaticResource AnswereButton}"
+                        Width="300"    
+                        Height="120"  
+                        Margin="10" 
+                        Grid.Row="0" 
+                        Grid.Column="0"
+                        TabIndex="1">
+                        <Grid>
+                            <Image 
+                                Source="pack://application:,,,/Resources/correct.png" 
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Image 
+                                Source="pack://application:,,,/Resources/incorrect.png" 
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerZero, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock 
+                                Text="{Binding CurrentAnswerOptions[0]}"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center"
+                                Width="180"
+                                Height="20"/>
+                        </Grid>
+                    </Button>
 
-                    <Grid>
-                        <Image 
-                            Source="pack://application:,,,/Resources/correct.png" 
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <Image 
-                            Source="pack://application:,,,/Resources/incorrect.png" 
-                            Width="50" 
-                            Height="50" 
-                            Margin="-40,-40,0,0" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Top"
-                            Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        <TextBlock 
-                            Text="{Binding CurrentAnswerOptions[3]}"
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Width="180"
-                            Height="20"/>
-                    </Grid>
-                </Button>
+                    <Button 
+                        Command="{Binding PickAnswerCommand}"
+                        CommandParameter="{Binding CurrentAnswerOptions[1]}"
+                        Style="{StaticResource AnswereButton}"
+                        Width="300"    
+                        Height="120"  
+                        Margin="10" 
+                        Grid.Row="0" 
+                        Grid.Column="1"
+                        TabIndex="2">
+                        <Grid>
+                            <Image 
+                                Source="pack://application:,,,/Resources/correct.png"  
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Image 
+                                Source="pack://application:,,,/Resources/incorrect.png"  
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerOne, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock 
+                                Text="{Binding CurrentAnswerOptions[1]}"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center"
+                                Width="180"
+                                Height="20"/>
+                        </Grid>
+                    </Button>
+
+                    <Button 
+                        Command="{Binding PickAnswerCommand}"
+                        CommandParameter="{Binding CurrentAnswerOptions[2]}"
+                        Style="{StaticResource AnswereButton}"
+                        Width="300"    
+                        Height="120"  
+                        Margin="10" 
+                        Grid.Row="1" 
+                        Grid.Column="0"
+                        TabIndex="2">
+                        <Grid>
+                            <Image 
+                                Source="pack://application:,,,/Resources/correct.png" 
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Image 
+                                Source="pack://application:,,,/Resources/incorrect.png" 
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerTwo, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock 
+                                Text="{Binding CurrentAnswerOptions[2]}"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center"
+                                Width="180"
+                                Height="20"/>
+                        </Grid>
+                    </Button>
+                    
+                    <Button 
+                        Command="{Binding PickAnswerCommand}"
+                        CommandParameter="{Binding CurrentAnswerOptions[3]}"
+                        Style="{StaticResource AnswereButton}"
+                        Width="300"    
+                        Height="120"  
+                        Margin="10" 
+                        Grid.Row="1" 
+                        Grid.Column="1"
+                        TabIndex="2">
+
+                        <Grid>
+                            
+                            <Image 
+                                Source="pack://application:,,,/Resources/correct.png" 
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleCorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Image 
+                                Source="pack://application:,,,/Resources/incorrect.png" 
+                                Width="50" 
+                                Height="50" 
+                                Margin="-70,-60,0,0" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Visibility="{Binding PlayerViewModelCheckAnswer.IsVisibleIncorrectIconAnswerThree, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock 
+                                Text="{Binding CurrentAnswerOptions[3]}"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center"
+                                Width="180"
+                                Height="20"/>
+                            </Grid>
+                    </Button>
+                    
+                </Grid>
             </Grid>
         </Grid>
         

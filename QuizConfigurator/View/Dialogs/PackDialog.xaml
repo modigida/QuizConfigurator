@@ -83,7 +83,7 @@
 
             <Slider 
                 Grid.Row="1" 
-                Minimum="0" 
+                Minimum="5" 
                 Maximum="120" 
                 Value="{Binding TimeLimitInSeconds, Converter={StaticResource DoubleToIntConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                 TickFrequency="5" 

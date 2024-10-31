@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
         Icon="Resources/q_icon.ico"
-        Title="Quiz Configurator" Height="500" Width="800"
+        Title="Quiz Configurator" MinHeight="600" MinWidth="750" Height="600" Width="750"
         Background="#F0F0F0">
     
     <Window.Resources>
