@@ -362,7 +362,6 @@
                 Orientation="Horizontal"
                 Grid.Row="2">
                 <Button 
-                    Content="Restart" 
                     Command="{Binding PlayerViewModel.RestartGameCommand}"
                     Style="{StaticResource AnswereButton}"
                     HorizontalAlignment="Center" 
@@ -370,7 +369,12 @@
                     Width="200"
                     Height="70"
                     Margin="10"
-                    TabIndex="0"/>
+                    TabIndex="0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <fa:IconBlock Icon="ArrowsRotate" Margin="0,0,10,0"/>
+                        <TextBlock Text="Restart"/>
+                    </StackPanel>
+                </Button>
                 <Button 
                     Content="Cancel" 
                     Command="{Binding SetConfigurationModeCommand}"

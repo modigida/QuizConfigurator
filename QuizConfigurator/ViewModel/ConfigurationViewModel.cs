@@ -69,7 +69,6 @@ public class ConfigurationViewModel : BaseViewModel
     public ICommand AddQuestionCommand { get; }
     public ICommand EditPackOptionsCommand { get; }
     public ICommand ClosePackOptionsCommand { get; }
-
     public string SelectionMessage
     {
         get

@@ -203,6 +203,8 @@ public class PlayerViewModel : BaseViewModel
     }
     public async Task Start()
     {
+        AmountOfCorrectAnswers = 0;
+
         IsGameOver = false;
 
         var result = MessageBox.Show("Play with sound?", "Sound Setting", MessageBoxButton.YesNo, MessageBoxImage.Question);
