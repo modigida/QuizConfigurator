@@ -91,11 +91,11 @@
         
     </UserControl.Resources>
 
-    <Grid>
+    <Grid MaxWidth="1000" MaxHeight="1000">
         <Grid Visibility="{Binding PlayerViewModel.IsGameOver, Converter={StaticResource InverseBoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" MinHeight="300"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -176,8 +176,8 @@
             
             <Grid 
                 Grid.Row="1" 
-                MaxWidth="750" 
-                MaxHeight="400"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
                 DataContext="{Binding PlayerViewModel}">
 
                 <Grid.RowDefinitions>

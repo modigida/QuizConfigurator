@@ -9,6 +9,7 @@
              d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -22,6 +23,7 @@
                     Header="_New Question Pack" 
                     Command="{Binding CreateNewPackCommand}"
                     Icon="{fa:Icon FolderPlus}"/>
+                
                 <MenuItem 
                     Header="_Select Question Pack"
                     Icon="{fa:Icon FolderOpen}">
@@ -36,6 +38,7 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
+                
                 <MenuItem 
                     Header="_Delete Question Pack"
                     Command="{Binding RemoveQuestionPackCommand}"
@@ -43,11 +46,13 @@
                 <Separator/>
                 <MenuItem 
                     Header="_Import Questions" 
+                    InputGestureText="Ctrl+I"
                     Command="{Binding OpenImportQuestionsCommand}"
                     Icon="{fa:Icon Fileimport}"/>
                 <Separator/>
                 <MenuItem 
-                    Header="E_xit  Alt+F4" 
+                    Header="E_xit" 
+                    InputGestureText="Alt+F4"
                     Command="{Binding ExitProgramCommand}"
                     Icon="{fa:Icon Xmark}"/>
             </MenuItem>
@@ -55,36 +60,42 @@
 
             <MenuItem Header="_Edit">
                 <MenuItem 
-                    Header="_Add Question  Insert" 
+                    Header="_Add Question" 
+                    InputGestureText="Insert"
                     Command="{Binding ConfigurationViewModel.AddQuestionCommand}"
                     Icon="{fa:Icon Plus}"/>
                 <MenuItem 
-                    Header="_Remove Question   Delete" 
+                    Header="_Remove Question" 
+                    InputGestureText="Delete"
                     Command="{Binding ConfigurationViewModel.RemoveQuestionCommand}"
                     Icon="{fa:Icon Minus}"/>
                 <MenuItem 
                     Header="Pack _Options" 
+                    InputGestureText="Ctrl+O"
                     Command="{Binding ConfigurationViewModel.EditPackOptionsCommand}"
                     Icon="{fa:Icon Sliders}"/>
             </MenuItem>
 
-
             <MenuItem Header="_View">
                 <MenuItem 
-                    Header="_Play" 
+                    Header="_Play"
+                    InputGestureText="Ctrl+P"
                     Command="{Binding SetPlayModeCommand}"
                     Icon="{fa:Icon Play}"/>
                 <MenuItem 
                     Header="E_dit"
+                    InputGestureText="Ctrl+E"
                     Command="{Binding SetConfigurationModeCommand}"
                     Icon="{fa:Icon Gears}"/>
                 <Separator/>
                 <MenuItem 
                     Header="F_ull Screen"
+                    InputGestureText="Alt+Enter"
                     Command="{Binding ToggleFullScreenCommand}"
                     Icon="{fa:Icon Expand}"/>
             </MenuItem>
         </Menu>
+        
         <StackPanel Grid.Column="1">
             <TextBlock 
                 Text="{Binding CurrentMessageContent, Mode=TwoWay}" 
