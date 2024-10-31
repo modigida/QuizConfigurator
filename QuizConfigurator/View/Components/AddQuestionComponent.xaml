@@ -9,19 +9,33 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Margin="15,0">
+    <Grid Margin="15,0,15,30" DataContext="{Binding ConfigurationViewModel.ActiveQuestion}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel DataContext="{Binding ConfigurationViewModel.ActiveQuestion}">
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
             <Label 
+                Grid.Row="0" 
                 Content="Question:" 
                 FontWeight="Bold"/>
+            
             <TextBox 
-                Height="80"
-                Text="{Binding Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                Grid.Row="1"
+                VerticalAlignment="Stretch"
+                Text="{Binding Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                TextWrapping="Wrap"
+                Margin="0,0,0,30"/>
+        </Grid>
+        
+        <StackPanel Grid.Row="2">
             <Label 
                 Content="Correct Answer:" 
                 FontWeight="Bold"/>
@@ -42,14 +56,13 @@
             <TextBox 
                 Height="20"
                 Text="{Binding IncorrectAnswers[1], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                
+
             <Label 
                 Content="Third Incorrect Answer:" 
                 FontWeight="Bold"/>
             <TextBox 
                 Height="20"
                 Text="{Binding IncorrectAnswers[2], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-
         </StackPanel>
 
     </Grid>

@@ -18,18 +18,16 @@
         <Border 
             BorderBrush="#1c1c1c" 
             BorderThickness="0.5"
-            CornerRadius="1"
+            CornerRadius="5"
             SnapsToDevicePixels="True"
             Padding="5"
             Margin="5"
             VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            MinHeight="400">
+            HorizontalAlignment="Stretch">
 
             <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden">
                 <ListView
                     BorderThickness="0"
-                    MaxHeight="390"
                     SelectionMode="Multiple"
                     ItemsSource="{Binding ActivePack.Questions}"
                     helper:ListViewHelper.BindableSelectedItems="{Binding ConfigurationViewModel.SelectedItems}"

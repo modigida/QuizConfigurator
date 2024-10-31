@@ -16,6 +16,7 @@
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
+    
     <Window.InputBindings>
         <KeyBinding Key="Enter" Modifiers="Alt" Command="{Binding ToggleFullScreenCommand}" />
         <KeyBinding Key="F4" Modifiers="Alt" Command="{Binding ExitProgramCommand}" />
@@ -27,12 +28,14 @@
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveToJsonCommand}" />
 
         <KeyBinding Key="Insert" Command="{Binding ConfigurationViewModel.AddQuestionCommand}" />
-
     </Window.InputBindings>
-    <Grid>
+    
+    <Grid 
+        HorizontalAlignment="Stretch" 
+        VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <view:MenuView Grid.Row="0"/>
