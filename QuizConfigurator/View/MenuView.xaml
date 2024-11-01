@@ -41,6 +41,7 @@
                 
                 <MenuItem 
                     Header="_Delete Question Pack"
+                    InputGestureText="Ctrl+U"
                     Command="{Binding RemoveQuestionPackCommand}"
                     Icon="{fa:Icon FolderMinus}"/>
                 <Separator/>

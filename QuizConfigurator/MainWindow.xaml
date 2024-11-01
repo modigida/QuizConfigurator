@@ -25,6 +25,7 @@
         <KeyBinding Key="E" Modifiers="Ctrl" Command="{Binding SetConfigurationModeCommand}" />
 
         <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding OpenImportQuestionsCommand}" />
+        <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding RemoveQuestionPackCommand}" />
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveToJsonCommand}" />
 
         <KeyBinding Key="Insert" Command="{Binding ConfigurationViewModel.AddQuestionCommand}" />

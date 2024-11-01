@@ -87,13 +87,17 @@ public class ImportQuestionsViewModel : BaseViewModel
 
             _mainWindowViewModel.CurrentMessageContent = "Categories loaded successfully";
 
-            await Task.Delay(1000);
+            await Task.Delay(1500);
 
             _mainWindowViewModel.CurrentMessageContent = string.Empty;
         }
         catch (Exception ex)
         {
             _mainWindowViewModel.CurrentMessageContent = "Failed to load categories";
+
+            await Task.Delay(1500);
+
+            _mainWindowViewModel.CurrentMessageContent = string.Empty;
         }
     }
     private async void ExecuteImportQuestions(object obj)
@@ -105,12 +109,14 @@ public class ImportQuestionsViewModel : BaseViewModel
             string difficulty = Difficulty.ToString().ToLower();
             await GetTriviaQuestionsAsync(amount, category, difficulty);
             _mainWindowViewModel.ClosePackDialog(ImportDialog);
-            await Task.Delay(1000);
+            await Task.Delay(2000);
             _mainWindowViewModel.CurrentMessageContent = string.Empty;
         }
         catch (Exception ex)
         {
             _mainWindowViewModel.CurrentMessageContent = $"{ex.Message}";
+            await Task.Delay(2000);
+            _mainWindowViewModel.CurrentMessageContent = string.Empty;
         }
     }
     public async Task GetTriviaQuestionsAsync(string amount, string category, string difficulty)
@@ -141,6 +147,8 @@ public class ImportQuestionsViewModel : BaseViewModel
         catch (Exception ex)
         {
             _mainWindowViewModel.CurrentMessageContent = "Failed to load questions";
+            await Task.Delay(2000);
+            _mainWindowViewModel.CurrentMessageContent = string.Empty;
         }
     }
 }
