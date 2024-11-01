@@ -1,6 +1,6 @@
 # Quiz Configurator
 
-This is my third assignment for my .NET studies at IT-Högskolan. Assignment submitted in november 2024. 
+This is my third assignment for my .NET studies at IT-Högskolan. Assignment submitted in november 2024. This is my first GUI application in WPF, the first time I use Json and my first ever API-call. 
 
 ## Project Overview
 
