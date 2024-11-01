@@ -12,6 +12,7 @@ namespace QuizConfigurator.ViewModel;
 public class ImportQuestionsViewModel : BaseViewModel
 {
     private MainWindowViewModel _mainWindowViewModel;
+    private bool isCategoriesLoaded { get; set; }
     public ImportQuestionsDialog ImportDialog { get; set; }
     public OpenTriviaCategories Category { get; set; }
 
@@ -90,6 +91,8 @@ public class ImportQuestionsViewModel : BaseViewModel
             await Task.Delay(1500);
 
             _mainWindowViewModel.CurrentMessageContent = string.Empty;
+
+            isCategoriesLoaded = true;
         }
         catch (Exception ex)
         {
@@ -98,16 +101,25 @@ public class ImportQuestionsViewModel : BaseViewModel
             await Task.Delay(1500);
 
             _mainWindowViewModel.CurrentMessageContent = string.Empty;
+
+            isCategoriesLoaded = false;
         }
     }
     private async void ExecuteImportQuestions(object obj)
     {
         try
         {
-            string amount = NumberOfQuestions.ToString();
-            string category = Category.Id.ToString();
-            string difficulty = Difficulty.ToString().ToLower();
-            await GetTriviaQuestionsAsync(amount, category, difficulty);
+            if (isCategoriesLoaded)
+            {
+                string amount = NumberOfQuestions.ToString();
+                string category = Category.Id.ToString();
+                string difficulty = Difficulty.ToString().ToLower();
+                await GetTriviaQuestionsAsync(amount, category, difficulty);
+            }
+            else
+            {
+                _mainWindowViewModel.CurrentMessageContent = "Failed to load questions";
+            }
             _mainWindowViewModel.ClosePackDialog(ImportDialog);
             await Task.Delay(2000);
             _mainWindowViewModel.CurrentMessageContent = string.Empty;
