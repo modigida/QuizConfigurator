@@ -236,7 +236,8 @@
                                 VerticalAlignment="Center" 
                                 HorizontalAlignment="Center"
                                 Width="180"
-                                Height="20"/>
+                                Height="Auto"
+                                TextWrapping="Wrap"/>
                         </Grid>
                     </Button>
 
@@ -272,7 +273,8 @@
                                 VerticalAlignment="Center" 
                                 HorizontalAlignment="Center"
                                 Width="180"
-                                Height="20"/>
+                                Height="Auto"
+                                TextWrapping="Wrap"/>
                         </Grid>
                     </Button>
 
@@ -308,7 +310,8 @@
                                 VerticalAlignment="Center" 
                                 HorizontalAlignment="Center"
                                 Width="180"
-                                Height="20"/>
+                                Height="Auto"
+                                TextWrapping="Wrap"/>
                         </Grid>
                     </Button>
                     
@@ -346,7 +349,8 @@
                                 VerticalAlignment="Center" 
                                 HorizontalAlignment="Center"
                                 Width="180"
-                                Height="20"/>
+                                Height="Auto"
+                                TextWrapping="Wrap"/>
                             </Grid>
                     </Button>
                     
