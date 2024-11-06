@@ -53,11 +53,17 @@ public class ImportQuestionsViewModel : BaseViewModel
         Difficulty = Difficulty.Medium;
         NumberOfQuestions = 5;
 
-        ExecuteImportCommand = new RelayCommand(ExecuteImportQuestions);
+        ExecuteImportCommand = new RelayCommand(ExecuteImportQuestions, CanExecuteImportQuestions);
         CancelImportDialogCommand = new RelayCommand(mainWindowViewModel.ClosePackDialog);
     }
+
+    private bool CanExecuteImportQuestions(object arg) => isCategoriesLoaded;
     public async void OpenImportQuestions(object obj)
     {
+        if (!isCategoriesLoaded)
+        {
+            await LoadCategoriesAsync();
+        }
         var importDialog = new ImportQuestionsDialog
         {
             Owner = _mainWindowViewModel.ParentWindow,
